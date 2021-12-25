@@ -15,6 +15,7 @@ namespace TwilightCombatTracker
         private Random random = new Random();
         public HashSet<Tag> globalBluTags = new HashSet<Tag>();
         public HashSet<Tag> globalRedTags = new HashSet<Tag>();
+        private Dictionary<string, Unit> unitNameLookup = new Dictionary<string, Unit>();
 
         public List<Unit> JointList
         {
@@ -310,15 +311,25 @@ namespace TwilightCombatTracker
                 foreach (Unit unit in BluForUnits)
                 {
                     unit.Tags.Add(Tag.GDI);
+                    unitNameLookup.Add(unit.Name, unit);
                 }
             }
             else
             {
                 OpForUnits = JsonConvert.DeserializeObject<List<Unit>>(content);
-
+                
                 foreach (Unit unit in OpForUnits)
                 {
                     unit.Tags.Add(Tag.Nod);
+                    unitNameLookup.Add(unit.Name, unit);
+                }
+            }
+
+            foreach (Unit unit in JointList)
+            {
+                if (unit.Bunker != null && unitNameLookup.ContainsKey(unit.Bunker.Name))
+                {
+                    unit.Bunker = unitNameLookup[unit.Bunker.Name];
                 }
             }
 
