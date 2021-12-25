@@ -225,5 +225,10 @@ namespace TwilightCombatTracker
             return obj is Equipment &&
                 ((Equipment) obj).Name.Equals(Name);
         }
+
+        public override int GetHashCode()
+        {
+            return Name.GetHashCode();
+        }
     }
 }

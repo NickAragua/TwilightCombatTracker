@@ -290,8 +290,13 @@ namespace TwilightCombatTracker
 
         public override bool Equals(object obj)
         {
-            return obj is Unit &&
-                ((Unit) obj).Name.Equals(Name);
+            return obj is Unit unit &&
+                unit.Name.Equals(Name);
+        }
+
+        public override int GetHashCode()
+        {
+            return Name.GetHashCode();
         }
     }
 }

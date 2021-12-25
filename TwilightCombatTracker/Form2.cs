@@ -30,20 +30,7 @@ namespace TwilightCombatTracker
             currentUnit = unit;
 
             SetUpUI();
-
-            txtUnitName.Text = unit.Name;
-            numSpeed.Value = unit.Speed;
-            numHealth.Value = unit.Health;
-
-            foreach (Tag tag in unit.Tags)
-            {
-                lstUnitTags.SelectedItems.Add(tag);
-            }
-
-            foreach (Equipment equipment in unit.Weapons)
-            {
-                lstUnitEquipment.SelectedItems.Add(equipment);
-            }
+            PopulateEntryFields();
         }
 
         public frmAddUnit(bool bluFor, frmCombatTracker parent)
@@ -69,6 +56,19 @@ namespace TwilightCombatTracker
                 lstUnitEquipment.Items.Add(equipment);
             }
 
+            btnAddUnit.Click += ClickHandler;
+            btnNext.Click += DiffUnitHandler;
+            btnPrev.Click += DiffUnitHandler;
+        }
+
+        public void PopulateEntryFields()
+        {
+            txtUnitName.Text = currentUnit.Name ?? "";
+            numSpeed.Value = currentUnit?.Speed ?? 1;
+            numHealth.Value = currentUnit?.Health ?? 100;
+            txtInitXP.Text = currentUnit?.DrivingXP.ToString() ?? "";
+            txtCombatXP.Text = currentUnit?.GunneryXP.ToString() ?? "";
+
             Unit none = new Unit();
             none.Name = NO_UNIT;
 
@@ -84,8 +84,18 @@ namespace TwilightCombatTracker
             }
 
             cboBunker.SelectedItem = currentUnit?.Bunker;
+            lstUnitTags.SelectedItems.Clear();
+            lstUnitEquipment.SelectedItems.Clear();
 
-            btnAddUnit.Click += ClickHandler;
+            foreach (Tag tag in currentUnit.Tags)
+            {
+                lstUnitTags.SelectedItems.Add(tag);
+            }
+
+            foreach (Equipment equipment in currentUnit.Weapons)
+            {
+                lstUnitEquipment.SelectedItems.Add(equipment);
+            }
         }
 
         public void ClickHandler(object sender, EventArgs e)
@@ -125,7 +135,26 @@ namespace TwilightCombatTracker
                 parent.PopulateBluForList();
             }
 
+            int newCombatXP;
+            if (Int32.TryParse(txtCombatXP.Text, out newCombatXP))
+            {
+                u.GunneryXP = newCombatXP;
+            }
+
+            int newInitXP;
+            if (Int32.TryParse(txtInitXP.Text, out newInitXP))
+            {
+                u.DrivingXP = newInitXP;
+            }
+
             Close();
+        }
+
+        public void DiffUnitHandler(object sender, EventArgs e)
+        {
+            currentUnit = parent.getUnit(bluFor, sender == btnNext);
+
+            PopulateEntryFields();
         }
     }
 }

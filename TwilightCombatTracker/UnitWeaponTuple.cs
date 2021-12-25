@@ -22,5 +22,10 @@ namespace TwilightCombatTracker
                 ((UnitEquipmentTuple) obj).Unit.Equals(Unit) &&
                 ((UnitEquipmentTuple) obj).Equipment.Equals(Equipment);
         }
+
+        public override int GetHashCode()
+        {
+            return $"{Unit.Name}{Equipment.Name}".GetHashCode();
+        }
     }
 }

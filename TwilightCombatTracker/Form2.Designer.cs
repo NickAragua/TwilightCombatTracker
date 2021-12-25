@@ -38,6 +38,12 @@ namespace TwilightCombatTracker
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.cboBunker = new System.Windows.Forms.ComboBox();
+            this.txtCombatXP = new System.Windows.Forms.TextBox();
+            this.txtInitXP = new System.Windows.Forms.TextBox();
+            this.label3 = new System.Windows.Forms.Label();
+            this.label4 = new System.Windows.Forms.Label();
+            this.btnNext = new System.Windows.Forms.Button();
+            this.btnPrev = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.numSpeed)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numHealth)).BeginInit();
             this.SuspendLayout();
@@ -60,7 +66,7 @@ namespace TwilightCombatTracker
             // 
             // btnAddUnit
             // 
-            this.btnAddUnit.Location = new System.Drawing.Point(12, 345);
+            this.btnAddUnit.Location = new System.Drawing.Point(12, 398);
             this.btnAddUnit.Name = "btnAddUnit";
             this.btnAddUnit.Size = new System.Drawing.Size(75, 23);
             this.btnAddUnit.TabIndex = 2;
@@ -136,11 +142,67 @@ namespace TwilightCombatTracker
             this.cboBunker.Size = new System.Drawing.Size(121, 21);
             this.cboBunker.TabIndex = 9;
             // 
+            // txtCombatXP
+            // 
+            this.txtCombatXP.Location = new System.Drawing.Point(12, 372);
+            this.txtCombatXP.Name = "txtCombatXP";
+            this.txtCombatXP.Size = new System.Drawing.Size(100, 20);
+            this.txtCombatXP.TabIndex = 10;
+            // 
+            // txtInitXP
+            // 
+            this.txtInitXP.Location = new System.Drawing.Point(12, 345);
+            this.txtInitXP.Name = "txtInitXP";
+            this.txtInitXP.Size = new System.Drawing.Size(100, 20);
+            this.txtInitXP.TabIndex = 11;
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(118, 375);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(60, 13);
+            this.label3.TabIndex = 12;
+            this.label3.Text = "Combat XP";
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(118, 348);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(38, 13);
+            this.label4.TabIndex = 13;
+            this.label4.Text = "Init XP";
+            // 
+            // btnNext
+            // 
+            this.btnNext.Location = new System.Drawing.Point(143, 398);
+            this.btnNext.Name = "btnNext";
+            this.btnNext.Size = new System.Drawing.Size(41, 23);
+            this.btnNext.TabIndex = 14;
+            this.btnNext.Text = "Next";
+            this.btnNext.UseVisualStyleBackColor = true;
+            // 
+            // btnPrev
+            // 
+            this.btnPrev.Location = new System.Drawing.Point(93, 398);
+            this.btnPrev.Name = "btnPrev";
+            this.btnPrev.Size = new System.Drawing.Size(44, 23);
+            this.btnPrev.TabIndex = 15;
+            this.btnPrev.Text = "Prev";
+            this.btnPrev.UseVisualStyleBackColor = true;
+            // 
             // frmAddUnit
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(190, 375);
+            this.ClientSize = new System.Drawing.Size(190, 433);
+            this.Controls.Add(this.btnPrev);
+            this.Controls.Add(this.btnNext);
+            this.Controls.Add(this.label4);
+            this.Controls.Add(this.label3);
+            this.Controls.Add(this.txtInitXP);
+            this.Controls.Add(this.txtCombatXP);
             this.Controls.Add(this.cboBunker);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
@@ -170,5 +232,11 @@ namespace TwilightCombatTracker
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.ComboBox cboBunker;
+        private System.Windows.Forms.TextBox txtCombatXP;
+        private System.Windows.Forms.TextBox txtInitXP;
+        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.Button btnNext;
+        private System.Windows.Forms.Button btnPrev;
     }
 }

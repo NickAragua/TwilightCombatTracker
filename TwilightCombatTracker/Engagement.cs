@@ -57,8 +57,18 @@ namespace TwilightCombatTracker
                 other.Defender.Equals(Defender);
         }
 
+        public override int GetHashCode()
+        {
+            return $"{Attacker.Unit.Name}{Attacker.Equipment.Name}{Defender.Unit.Name}{Defender.Equipment.Name}".GetHashCode();
+        }
+
         public string DetailedBreakdown()
         {
+            String attackerCrit = Attacker.Unit.Tags.Contains(Tag.InitCrit) ? "Attacker has initiative crit.\r\n" : "";
+            String attackerCritFail = Attacker.Unit.Tags.Contains(Tag.InitCritFail) ? "Attacker has initiative crit fail.\r\n" : "";
+            String defenderCrit = Defender.Unit.Tags.Contains(Tag.InitCrit) ? "Defender has initiative crit.\r\n" : "";
+            String defenderCritFail = Defender.Unit.Tags.Contains(Tag.InitCrit) ? "Defender has initiative crit fail.\r\n" : "";
+
             String attacker = Attacker.Unit.getApplicableModifierString(Defender.Unit, Attacker.Equipment, supportDivider);
 
             String defenderSandbagString = Defender.Unit.ExternalTags.Contains(Tag.Sandbags) &&
@@ -88,7 +98,7 @@ namespace TwilightCombatTracker
             string supportText = IsSupportingEngagement ? $" / {supportDivider} (support)" : "";
 
             //\r\ndebug: actual mods {actualAttackerMod}{supportText} vs {actualDefenderMod}*/
-            return $"{Attacker.Unit} vs {Defender.Unit}\r\n1d100{attacker}{attackerSupportAccumulator}{vsString}{defender}{defenderSupportAccumulator}";
+            return $"{attackerCrit}{attackerCritFail}{defenderCrit}{defenderCritFail}{Attacker.Unit} vs {Defender.Unit}\r\n1d100{attacker}{attackerSupportAccumulator}{vsString}{defender}{defenderSupportAccumulator}";
         }
 
         public string ExecuteSupport(Random random, out int supportResult)

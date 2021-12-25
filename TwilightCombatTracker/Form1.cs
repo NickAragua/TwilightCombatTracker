@@ -1,12 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace TwilightCombatTracker
@@ -248,6 +242,28 @@ namespace TwilightCombatTracker
             var hold = selectedEngagement;
             PopulateEngagementList();
             selectedEngagement = hold;
+        }
+
+        public Unit getUnit(bool blufor, bool next)
+        {
+            ListBox list = blufor ? lstBlueFor : lstOpfor;
+            
+            if (list.SelectedIndex >= 0)
+            {
+                int nextIndex = next ? list.SelectedIndex + 1 : list.SelectedIndex - 1;
+                if (nextIndex < 0)
+                {
+                    nextIndex = list.Items.Count - 1;
+                } 
+                else if (nextIndex >= list.Items.Count)
+                {
+                    nextIndex = 0;
+                }
+
+                list.SelectedIndex = nextIndex;
+            }
+
+            return ((UnitEquipmentTuple) list.SelectedItem).Unit;
         }
     }
 }

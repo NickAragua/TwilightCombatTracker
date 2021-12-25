@@ -11,7 +11,7 @@ namespace TwilightCombatTracker
         private List<Unit> BluForUnits = new List<Unit>();
         private List<Unit> OpForUnits = new List<Unit>();
         public List<Engagement> currentEngagements = new List<Engagement>();
-        private Dictionary<UnitEquipmentTuple, int> unitEngagementCount = new Dictionary<UnitEquipmentTuple, int>();
+        private Dictionary<int, int> unitEngagementCount = new Dictionary<int, int>();
         private Random random = new Random();
         public HashSet<Tag> globalBluTags = new HashSet<Tag>();
         public HashSet<Tag> globalRedTags = new HashSet<Tag>();
@@ -94,10 +94,10 @@ namespace TwilightCombatTracker
 
         public bool CanUnitAttack(UnitEquipmentTuple unit)
         {
-            return !unitEngagementCount.ContainsKey(unit);
+            return !unitEngagementCount.ContainsKey(unit.GetHashCode());
         }
 
-        public Engagement CreateEngagement(UnitEquipmentTuple attacker, UnitEquipmentTuple defender)
+        public Engagement CreateEngagement(UnitEquipmentTuple attacker, UnitEquipmentTuple defender, bool terminate = false)
         {
             if (!CanUnitAttack(attacker) && !CanUnitAttack(defender))
             {
@@ -106,16 +106,17 @@ namespace TwilightCombatTracker
 
             // if the attacker can't attack or the defender has a higher initiative, set the other unit
             // as the attacker by default
-            if (!CanUnitAttack(attacker) || defender.Unit.CurrentInit > attacker.Unit.CurrentInit)
+            if ((!CanUnitAttack(attacker) || defender.Unit.CurrentInit > attacker.Unit.CurrentInit) && !terminate)
             {
-                return CreateEngagement(defender, attacker);
+                // only flip the engagement once. If we can't create one for either side, just don't do it.
+                return CreateEngagement(defender, attacker, true);
             }
 
             int supportDivider = Engagement.NO_SUPPORT;
 
-            if (unitEngagementCount.ContainsKey(defender))
+            if (unitEngagementCount.ContainsKey(defender.GetHashCode()))
             {
-                supportDivider = (int)Math.Pow(2, unitEngagementCount[defender]);
+                supportDivider = (int)Math.Pow(2, unitEngagementCount[defender.GetHashCode()]);
             }
 
             Engagement e = new Engagement(attacker, defender, supportDivider);
@@ -126,18 +127,18 @@ namespace TwilightCombatTracker
         {
             currentEngagements.Add(engagement);
 
-            if (!unitEngagementCount.ContainsKey(engagement.Attacker))
+            if (!unitEngagementCount.ContainsKey(engagement.Attacker.GetHashCode()))
             {
-                unitEngagementCount.Add(engagement.Attacker, 0);
+                unitEngagementCount.Add(engagement.Attacker.GetHashCode(), 0);
             }
 
-            if (!unitEngagementCount.ContainsKey(engagement.Defender))
+            if (!unitEngagementCount.ContainsKey(engagement.Defender.GetHashCode()))
             {
-                unitEngagementCount.Add(engagement.Defender, 0);
+                unitEngagementCount.Add(engagement.Defender.GetHashCode(), 0);
             }
 
-            unitEngagementCount[engagement.Attacker]++;
-            unitEngagementCount[engagement.Defender]++;
+            unitEngagementCount[engagement.Attacker.GetHashCode()]++;
+            unitEngagementCount[engagement.Defender.GetHashCode()]++;
 
             engagement.Attacker.Unit.Tags.Add(Tag.EngagedThisTurn);
             engagement.Defender.Unit.Tags.Add(Tag.EngagedThisTurn);
@@ -336,7 +337,11 @@ namespace TwilightCombatTracker
         //x          Just-stunned units go to stunned tag
         //x          Stunned units go to non-stunned tag
         //TODO: Figure out init crit bonuses.
-        //          Idea - effectively sets initiative to that of highest initiative unit
+        //          Init Crit: Unit may engage any target, regardless of eligibility OR
+        //                  Unit may force potential engaging unit to pick another target
+        //                  This may happen once per init crit achieved.
+        //          Init Crit Fail: Unit must engage random init-eligible target;
+        //                  Target may force a reroll once per crit-fail that occurred
         //xTODO: Global Modifiers (rocky/urban terrain)
         //xTODO: Edit Unit
         //xTODO: Fixed Init vs Combat Modifiers
