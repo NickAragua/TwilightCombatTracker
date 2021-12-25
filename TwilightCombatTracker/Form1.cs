@@ -31,6 +31,7 @@ namespace TwilightCombatTracker
             btnEditBluforUnit.Click += EditUnitHandler;
             btnEditOpforUnit.Click += EditUnitHandler;
             btnFlipEngagement.Click += FlipEngagementHandler;
+            btnClearLog.Click += ClearLog;
 
             PopulateBluForList();
             PopulateOpforList();
@@ -244,7 +245,7 @@ namespace TwilightCombatTracker
             selectedEngagement = hold;
         }
 
-        public Unit getUnit(bool blufor, bool next)
+        public Unit GetUnit(bool blufor, bool next)
         {
             ListBox list = blufor ? lstBlueFor : lstOpfor;
             
@@ -264,6 +265,11 @@ namespace TwilightCombatTracker
             }
 
             return ((UnitEquipmentTuple) list.SelectedItem).Unit;
+        }
+
+        private void ClearLog(Object sender, EventArgs e)
+        {
+            txtAccumulator.Clear();
         }
     }
 }

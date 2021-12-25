@@ -50,6 +50,7 @@ namespace TwilightCombatTracker
             this.btnEditBluforUnit = new System.Windows.Forms.Button();
             this.btnEditOpforUnit = new System.Windows.Forms.Button();
             this.btnFlipEngagement = new System.Windows.Forms.Button();
+            this.btnClearLog = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // lstBlueFor
@@ -237,6 +238,15 @@ namespace TwilightCombatTracker
             this.btnFlipEngagement.Text = "Flip Attacker";
             this.btnFlipEngagement.UseVisualStyleBackColor = true;
             // 
+            // btnClearLog
+            // 
+            this.btnClearLog.Location = new System.Drawing.Point(433, 298);
+            this.btnClearLog.Name = "btnClearLog";
+            this.btnClearLog.Size = new System.Drawing.Size(75, 23);
+            this.btnClearLog.TabIndex = 21;
+            this.btnClearLog.Text = "Clear Log";
+            this.btnClearLog.UseVisualStyleBackColor = true;
+            // 
             // frmCombatTracker
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -244,6 +254,7 @@ namespace TwilightCombatTracker
             this.AutoSize = true;
             this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.ClientSize = new System.Drawing.Size(1195, 363);
+            this.Controls.Add(this.btnClearLog);
             this.Controls.Add(this.btnFlipEngagement);
             this.Controls.Add(this.btnEditOpforUnit);
             this.Controls.Add(this.btnEditBluforUnit);
@@ -293,6 +304,7 @@ namespace TwilightCombatTracker
         private System.Windows.Forms.Button btnEditBluforUnit;
         private System.Windows.Forms.Button btnEditOpforUnit;
         private System.Windows.Forms.Button btnFlipEngagement;
+        private System.Windows.Forms.Button btnClearLog;
     }
 }
 

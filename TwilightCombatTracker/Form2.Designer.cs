@@ -85,11 +85,6 @@ namespace TwilightCombatTracker
             // numSpeed
             // 
             this.numSpeed.Location = new System.Drawing.Point(12, 266);
-            this.numSpeed.Minimum = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
             this.numSpeed.Name = "numSpeed";
             this.numSpeed.Size = new System.Drawing.Size(75, 20);
             this.numSpeed.TabIndex = 5;
@@ -103,10 +98,15 @@ namespace TwilightCombatTracker
             // 
             this.numHealth.Location = new System.Drawing.Point(12, 292);
             this.numHealth.Maximum = new decimal(new int[] {
-            400,
+            1000,
             0,
             0,
             0});
+            this.numHealth.Minimum = new decimal(new int[] {
+            1000,
+            0,
+            0,
+            -2147483648});
             this.numHealth.Name = "numHealth";
             this.numHealth.Size = new System.Drawing.Size(75, 20);
             this.numHealth.TabIndex = 6;

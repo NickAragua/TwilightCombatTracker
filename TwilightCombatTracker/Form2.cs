@@ -116,13 +116,13 @@ namespace TwilightCombatTracker
                 u.Weapons.Add(equipment);
             }
 
-            if (cboBunker.SelectedItem == null || ((UnitEquipmentTuple) cboBunker.SelectedItem).Unit.Name == NO_UNIT)
+            if (cboBunker.SelectedItem == null || ((Unit) cboBunker.SelectedItem).Name == NO_UNIT)
             {
                 u.Bunker = null;
             }
             else
             {
-                u.Bunker = ((UnitEquipmentTuple) cboBunker.SelectedItem).Unit;
+                u.Bunker = (Unit) cboBunker.SelectedItem;
             }
 
             if (currentUnit == null)
@@ -152,7 +152,7 @@ namespace TwilightCombatTracker
 
         public void DiffUnitHandler(object sender, EventArgs e)
         {
-            currentUnit = parent.getUnit(bluFor, sender == btnNext);
+            currentUnit = parent.GetUnit(bluFor, sender == btnNext);
 
             PopulateEntryFields();
         }

@@ -120,6 +120,11 @@ namespace TwilightCombatTracker
                 supportDivider = (int)Math.Pow(2, unitEngagementCount[defender.GetHashCode()]);
             }
 
+            if (unitEngagementCount.ContainsKey(attacker.GetHashCode()))
+            {
+                supportDivider = (int)Math.Pow(2, unitEngagementCount[attacker.GetHashCode()]);
+            }
+
             Engagement e = new Engagement(attacker, defender, supportDivider);
             return e;
         }
@@ -158,6 +163,18 @@ namespace TwilightCombatTracker
                 int result = 0;
                 bool critFail = false;
                 bool critSuccess = false;
+
+                if (unit.Tags.Contains(Tag.Destroyed))
+                {
+                    unit.CurrentInit = -1;
+                    continue;
+                }
+
+                if (unit.Speed <= 0)
+                {
+                    unit.CurrentInit = 0;
+                    continue;
+                }
 
                 accumulator.AppendLine($"{unit} {unit.InitString()}");
 
