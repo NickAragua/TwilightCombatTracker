@@ -35,11 +35,13 @@ namespace TwilightCombatTracker
         {
             if (bluFor)
             {
+                u.Tags.Remove(Tag.Nod);
                 u.Tags.Add(Tag.GDI);
                 BluForUnits.Add(u);
             }
             else
             {
+                u.Tags.Remove(Tag.GDI);
                 u.Tags.Add(Tag.Nod);
                 OpForUnits.Add(u);
             }
@@ -57,6 +59,7 @@ namespace TwilightCombatTracker
 
         public void ApplyGlobalModifiers(Unit u)
         {
+            u.ExternalTags.Clear();
             if (u.Tags.Contains(Tag.GDI))
             {
                 foreach (Tag tag in globalBluTags)
@@ -95,7 +98,10 @@ namespace TwilightCombatTracker
 
         public bool CanUnitAttack(UnitEquipmentTuple unit)
         {
-            return !unitEngagementCount.ContainsKey(unit.GetHashCode());
+            // a unit cannot attack if it is already engaged or
+            // if it's destroyed/withdrawn/stunned/withdrawing
+            return !unitEngagementCount.ContainsKey(unit.GetHashCode()) && unit.Unit.IsActive() && 
+                !unit.Unit.Tags.Contains(Tag.Stunned) && !unit.Unit.Tags.Contains(Tag.Withdrawing);
         }
 
         public Engagement CreateEngagement(UnitEquipmentTuple attacker, UnitEquipmentTuple defender, bool terminate = false)
@@ -164,7 +170,7 @@ namespace TwilightCombatTracker
                 bool critFail = false;
                 bool critSuccess = false;
 
-                if (unit.Tags.Contains(Tag.Destroyed))
+                if (unit.Tags.Contains(Tag.Destroyed) || unit.Tags.Contains(Tag.Withdrawn))
                 {
                     unit.CurrentInit = -1;
                     continue;
@@ -268,10 +274,21 @@ namespace TwilightCombatTracker
 
             foreach (Unit unit in jointList)
             {
+                // skip units that have been taken out
+                if (!unit.IsActive())
+                {
+                    continue;
+                }
+
                 if (unit.Tags.Contains(Tag.DestructionPending))
                 {
                     unit.Tags.Remove(Tag.DestructionPending);
                     unit.Tags.Add(Tag.Destroyed);
+                    unit.Tags.Remove(Tag.StunPending);
+                    unit.Tags.Remove(Tag.Stunned);
+                    unit.Tags.Remove(Tag.Withdrawing);
+                    unit.Tags.Remove(Tag.Withdrawn);
+                    unit.Tags.Remove(Tag.EngagedThisTurn);
                 }
 
                 if (unit.Tags.Contains(Tag.Stunned))
@@ -293,7 +310,7 @@ namespace TwilightCombatTracker
                     accumulator.Append($"{unit.Name} withdraws.");
                 }
 
-                if (unit.Health <= 50)
+                if (unit.Health <= 50 && unit.IsActive() && !unit.Tags.Contains(Tag.Structure))
                 {
                     unit.Tags.Add(Tag.Withdrawing);
                 }
@@ -302,9 +319,30 @@ namespace TwilightCombatTracker
                 unit.Tags.Remove(Tag.InitCritFail);
                 unit.Tags.Remove(Tag.EngagedThisTurn);
                 unit.CurrentInit = null;
+
+                // check for bunker destruction/withdrawal, clear it out.
+                if (unit.Bunker != null)
+                {
+                    if (!unit.Bunker.IsActive())
+                    {
+                        unit.Bunker = null;
+                    }
+                }
             }
 
             return accumulator.ToString();
+        }
+
+        public void DeleteUnit(Unit unit, bool bluFor)
+        {
+            if (bluFor)
+            {
+                BluForUnits.Remove(unit);
+            } 
+            else
+            {
+                OpForUnits.Remove(unit);
+            }
         }
 
         public string SerializeUnits(bool bluFor)
@@ -328,7 +366,11 @@ namespace TwilightCombatTracker
                 foreach (Unit unit in BluForUnits)
                 {
                     unit.Tags.Add(Tag.GDI);
-                    unitNameLookup.Add(unit.Name, unit);
+
+                    if (!unitNameLookup.ContainsKey(unit.Name))
+                    {
+                        unitNameLookup.Add(unit.Name, unit);
+                    }
                 }
             }
             else
@@ -338,7 +380,11 @@ namespace TwilightCombatTracker
                 foreach (Unit unit in OpForUnits)
                 {
                     unit.Tags.Add(Tag.Nod);
-                    unitNameLookup.Add(unit.Name, unit);
+
+                    if (!unitNameLookup.ContainsKey(unit.Name))
+                    {
+                        unitNameLookup.Add(unit.Name, unit);
+                    }
                 }
             }
 
@@ -352,30 +398,5 @@ namespace TwilightCombatTracker
 
             ReapplyGlobalModifiers();
         }
-
-        //XTODO: finish Run Individual Engagement
-        //XTODO:     --tuned-up tag expires
-        //XTODO:     --ablative plating tag expires if hit
-        //?TODO: Flip Attacker/Defender State?
-        //XTODO: Damage display
-        //?TODO: Dynamically size lists based on unit status length
-        //xTODO: Eliminate space on supporting attacks report
-        //xTODO: End-of-round actions: 
-        //x          Un-engaged withdrawing units withdraw
-        //x          Just-stunned units go to stunned tag
-        //x          Stunned units go to non-stunned tag
-        //TODO: Figure out init crit bonuses.
-        //          Init Crit: Unit may engage any target, regardless of eligibility OR
-        //                  Unit may force potential engaging unit to pick another target
-        //                  This may happen once per init crit achieved.
-        //          Init Crit Fail: Unit must engage random init-eligible target;
-        //                  Target may force a reroll once per crit-fail that occurred
-        //xTODO: Global Modifiers (rocky/urban terrain)
-        //xTODO: Edit Unit
-        //xTODO: Fixed Init vs Combat Modifiers
-        //xTODO: Unit Bunker; Unit References Bunker - bunker takes damage instead
-        //xTODO: WeakRearArmor, Laser/Ablative effects
-        //TODO: Run real test fight
-
     }
 }

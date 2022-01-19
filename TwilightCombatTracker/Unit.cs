@@ -45,6 +45,11 @@ namespace TwilightCombatTracker
 
         public Unit Bunker { get; set; }
 
+        public bool IsActive()
+        {
+            return !Tags.Contains(Tag.Destroyed) && !Tags.Contains(Tag.Withdrawn);
+        }
+
         public Unit()
         {
             Tags = new HashSet<Tag>();
@@ -108,32 +113,37 @@ namespace TwilightCombatTracker
         {
             if (Tags.Contains(Tag.FootInfantry))
             {
-                if (ExternalTags.Contains(Tag.UrbanTerrain))
+                if (HasTag(Tag.UrbanTerrain))
                 {
-                    sb.Append(" + 10 (infantry in urban terrain)");
+                    sb.Append(" + 10 (infantry in 'urban' terrain)");
                 }
-                else if (ExternalTags.Contains(Tag.RockyTerrain))
+                else if (HasTag(Tag.RockyTerrain))
                 {
                     sb.Append(" + 5 (infantry in rocky terrain)");
                 }
+
+                if (HasTag(Tag.Sandbags))
+                {
+                    sb.Append(" + 5 (sandbags)");
+                }
             }
 
-            if (ExternalTags.Contains(Tag.Commander))
+            if (HasTag(Tag.Commander))
             {
                 sb.Append(" +5 (commander)");
             }
 
-            if (ExternalTags.Contains(Tag.CommsBonus))
+            if (HasTag(Tag.CommsBonus))
             {
                 sb.Append(" + 5 (comms)");
             }
 
-            if (ExternalTags.Contains(Tag.RemoteCommander))
+            if (HasTag(Tag.RemoteCommander))
             {
                 sb.Append(" -5 (remote commander)");
             }
 
-            if (ExternalTags.Contains(Tag.LocalCommander))
+            if (HasTag(Tag.LocalCommander))
             {
                 sb.Append(" +10 (local commander)");
             }
@@ -155,32 +165,37 @@ namespace TwilightCombatTracker
 
             if (Tags.Contains(Tag.FootInfantry))
             {
-                if (ExternalTags.Contains(Tag.UrbanTerrain))
+                if (HasTag(Tag.UrbanTerrain))
                 {
                     mod += 10;
                 }
-                else if (ExternalTags.Contains(Tag.RockyTerrain))
+                else if (HasTag(Tag.RockyTerrain))
+                {
+                    mod += 5;
+                }
+
+                if (HasTag(Tag.Sandbags))
                 {
                     mod += 5;
                 }
             }
 
-            if (ExternalTags.Contains(Tag.Commander))
+            if (HasTag(Tag.Commander))
             {
                 mod += 5;
             }
 
-            if (ExternalTags.Contains(Tag.CommsBonus))
+            if (HasTag(Tag.CommsBonus))
             {
                 mod += 5;
             }
 
-            if (ExternalTags.Contains(Tag.RemoteCommander))
+            if (HasTag(Tag.RemoteCommander))
             {
                 mod -= 5;
             }
 
-            if (ExternalTags.Contains(Tag.LocalCommander))
+            if (HasTag(Tag.LocalCommander))
             {
                 mod += 10;
             }
@@ -297,6 +312,11 @@ namespace TwilightCombatTracker
         public override int GetHashCode()
         {
             return Name.GetHashCode();
+        }
+
+        public bool HasTag(Tag tag)
+        {
+            return ExternalTags.Contains(tag) || Tags.Contains(tag);
         }
     }
 }

@@ -32,6 +32,10 @@ namespace TwilightCombatTracker
             btnEditOpforUnit.Click += EditUnitHandler;
             btnFlipEngagement.Click += FlipEngagementHandler;
             btnClearLog.Click += ClearLog;
+            btnDeleteBlue.Click += DeleteUnitHandler;
+            btnDeleteRed.Click += DeleteUnitHandler;
+            btnDefectBlue.Click += DefectHandler;
+            btnDefectRed.Click += DefectHandler;
 
             PopulateBluForList();
             PopulateOpforList();
@@ -124,8 +128,9 @@ namespace TwilightCombatTracker
                 btnCommitEngagement.Enabled = false;
             }
 
-            btnEditBluforUnit.Enabled = lstBlueFor.SelectedItem != null;
-            btnEditOpforUnit.Enabled = lstOpfor.SelectedItem != null;
+            SetIndividualUnitButtonState(lstBlueFor.SelectedItem != null, true);
+            SetIndividualUnitButtonState(lstOpfor.SelectedItem != null, false);
+
             btnFlipEngagement.Enabled = btnCommitEngagement.Enabled;
         }
 
@@ -139,6 +144,11 @@ namespace TwilightCombatTracker
         {
             bool blufor = sender == btnEditBluforUnit;
             ListBox selectedBox = blufor ? lstBlueFor : lstOpfor;
+
+            if (selectedBox.SelectedItem == null)
+            {
+                return;
+            }
             
             Unit unit = ((UnitEquipmentTuple)selectedBox.SelectedItem).Unit;
             frmAddUnit newForm = new frmAddUnit(unit, blufor, this);
@@ -209,16 +219,20 @@ namespace TwilightCombatTracker
         {
             if (openFileDialog.ShowDialog() == DialogResult.OK)
             {
+                bool bluFor = sender == btnLoadBlueUnits;
+
                 using (Stream fileStream = openFileDialog.OpenFile())
                 {
                     using (StreamReader sr = new StreamReader(fileStream))
                     {
-                        combatManager.DeserializeUnits(sender == btnLoadBlueUnits, sr.ReadToEnd());
+                        combatManager.DeserializeUnits(bluFor, sr.ReadToEnd());
                     }
                 }
 
                 PopulateBluForList();
                 PopulateOpforList();
+
+                SetIndividualUnitButtonState(false, bluFor);
             }
         }
 
@@ -226,6 +240,53 @@ namespace TwilightCombatTracker
         {
             frmGlobalFlags globalFlagForm = new frmGlobalFlags(this);
             globalFlagForm.ShowDialog();
+        }
+
+        private void DeleteUnitHandler(object sender, EventArgs e)
+        {
+            bool bluFor = sender == btnDeleteBlue;
+            Unit unit = bluFor ? ((UnitEquipmentTuple) lstBlueFor.SelectedItem).Unit : ((UnitEquipmentTuple)lstOpfor.SelectedItem).Unit;
+            combatManager.DeleteUnit(unit, bluFor);
+            
+            if (bluFor)
+            {
+                PopulateBluForList();
+            } 
+            else
+            {
+                PopulateOpforList();
+            }
+
+            SetIndividualUnitButtonState(false, bluFor);
+        }
+
+        private void DefectHandler(object sender, EventArgs e)
+        {
+            bool bluFor = sender == btnDefectBlue;
+            Unit unit = bluFor ? ((UnitEquipmentTuple)lstBlueFor.SelectedItem).Unit : ((UnitEquipmentTuple)lstOpfor.SelectedItem).Unit;
+            combatManager.DeleteUnit(unit, bluFor);
+            combatManager.AddUnit(unit, !bluFor);
+
+            PopulateBluForList();
+            PopulateOpforList();
+
+            SetIndividualUnitButtonState(false, bluFor);
+        }
+
+        private void SetIndividualUnitButtonState(bool enabled, bool bluFor)
+        {
+            if (bluFor)
+            {
+                btnDeleteBlue.Enabled = enabled;
+                btnEditBluforUnit.Enabled = enabled;
+                btnDefectBlue.Enabled = enabled;
+            }
+            else
+            {
+                btnDeleteRed.Enabled = enabled;
+                btnEditOpforUnit.Enabled = enabled;
+                btnDefectRed.Enabled = enabled;
+            }
         }
 
         private void EndRoundHandler(Object sender, EventArgs e)

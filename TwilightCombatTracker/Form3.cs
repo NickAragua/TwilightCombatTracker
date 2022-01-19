@@ -37,6 +37,8 @@ namespace TwilightCombatTracker
 
             lstBluModifiers.DataSource = qualifyingTagsLeft;
             lstOpModifiers.DataSource = qualifyingTagsRight;
+            lstBluModifiers.SelectedItems.Clear();
+            lstOpModifiers.SelectedItems.Clear();
 
             foreach (Tag tag in parent.combatManager.globalBluTags) 
             {

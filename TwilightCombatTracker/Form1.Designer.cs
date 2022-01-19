@@ -51,6 +51,10 @@ namespace TwilightCombatTracker
             this.btnEditOpforUnit = new System.Windows.Forms.Button();
             this.btnFlipEngagement = new System.Windows.Forms.Button();
             this.btnClearLog = new System.Windows.Forms.Button();
+            this.btnDeleteBlue = new System.Windows.Forms.Button();
+            this.btnDeleteRed = new System.Windows.Forms.Button();
+            this.btnDefectRed = new System.Windows.Forms.Button();
+            this.btnDefectBlue = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // lstBlueFor
@@ -247,13 +251,57 @@ namespace TwilightCombatTracker
             this.btnClearLog.Text = "Clear Log";
             this.btnClearLog.UseVisualStyleBackColor = true;
             // 
+            // btnDeleteBlue
+            // 
+            this.btnDeleteBlue.Enabled = false;
+            this.btnDeleteBlue.Location = new System.Drawing.Point(0, 357);
+            this.btnDeleteBlue.Name = "btnDeleteBlue";
+            this.btnDeleteBlue.Size = new System.Drawing.Size(75, 23);
+            this.btnDeleteBlue.TabIndex = 22;
+            this.btnDeleteBlue.Text = "Delete Unit";
+            this.btnDeleteBlue.UseVisualStyleBackColor = true;
+            // 
+            // btnDeleteRed
+            // 
+            this.btnDeleteRed.Enabled = false;
+            this.btnDeleteRed.Location = new System.Drawing.Point(164, 357);
+            this.btnDeleteRed.Name = "btnDeleteRed";
+            this.btnDeleteRed.Size = new System.Drawing.Size(75, 23);
+            this.btnDeleteRed.TabIndex = 23;
+            this.btnDeleteRed.Text = "Delete Unit";
+            this.btnDeleteRed.UseVisualStyleBackColor = true;
+            // 
+            // btnDefectRed
+            // 
+            this.btnDefectRed.Enabled = false;
+            this.btnDefectRed.Location = new System.Drawing.Point(246, 357);
+            this.btnDefectRed.Name = "btnDefectRed";
+            this.btnDefectRed.Size = new System.Drawing.Size(75, 23);
+            this.btnDefectRed.TabIndex = 24;
+            this.btnDefectRed.Text = "Defect";
+            this.btnDefectRed.UseVisualStyleBackColor = true;
+            // 
+            // btnDefectBlue
+            // 
+            this.btnDefectBlue.Enabled = false;
+            this.btnDefectBlue.Location = new System.Drawing.Point(81, 356);
+            this.btnDefectBlue.Name = "btnDefectBlue";
+            this.btnDefectBlue.Size = new System.Drawing.Size(75, 23);
+            this.btnDefectBlue.TabIndex = 25;
+            this.btnDefectBlue.Text = "Defect";
+            this.btnDefectBlue.UseVisualStyleBackColor = true;
+            // 
             // frmCombatTracker
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoSize = true;
             this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.ClientSize = new System.Drawing.Size(1195, 363);
+            this.ClientSize = new System.Drawing.Size(1195, 410);
+            this.Controls.Add(this.btnDefectBlue);
+            this.Controls.Add(this.btnDefectRed);
+            this.Controls.Add(this.btnDeleteRed);
+            this.Controls.Add(this.btnDeleteBlue);
             this.Controls.Add(this.btnClearLog);
             this.Controls.Add(this.btnFlipEngagement);
             this.Controls.Add(this.btnEditOpforUnit);
@@ -275,7 +323,7 @@ namespace TwilightCombatTracker
             this.Controls.Add(this.lstOpfor);
             this.Controls.Add(this.lstBlueFor);
             this.Name = "frmCombatTracker";
-            this.Text = "Form1";
+            this.Text = "Twilight Combat Tracker";
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -305,6 +353,10 @@ namespace TwilightCombatTracker
         private System.Windows.Forms.Button btnEditOpforUnit;
         private System.Windows.Forms.Button btnFlipEngagement;
         private System.Windows.Forms.Button btnClearLog;
+        private System.Windows.Forms.Button btnDeleteBlue;
+        private System.Windows.Forms.Button btnDeleteRed;
+        private System.Windows.Forms.Button btnDefectRed;
+        private System.Windows.Forms.Button btnDefectBlue;
     }
 }
 

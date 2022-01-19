@@ -98,10 +98,19 @@ namespace TwilightCombatTracker
         [Category("EnvironmentTag")]
         Sandbags = 36,
         [Category("EquipmentPropertyTag")]
-        NoDamage = 37
+        NoDamage = 37,
+        [Category("UnitPropertyTag")]
+        Hologram = 38,
+        [Category("UnitPropertyTag")]
+        Visceroid = 39
     }
 
     public static class TagProperties {
+        public static int CompareTag(Tag first, Tag second)
+        {
+            return first.ToString().CompareTo(second.ToString());
+        }
+
         /// <summary>
         /// Gets an attribute on an enum field value
         /// </summary>

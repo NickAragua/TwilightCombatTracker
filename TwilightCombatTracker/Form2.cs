@@ -46,15 +46,29 @@ namespace TwilightCombatTracker
 
         private void SetUpUI()
         {
+            List<Tag> tags = new List<Tag>();
+
             foreach (Tag tag in Enum.GetValues(typeof(Tag)))
             {
-                lstUnitTags.Items.Add(tag);
+                tags.Add(tag);
             }
 
-            foreach (Equipment equipment in Equipment.EquipmentDatabase)
+            tags.Sort(TagProperties.CompareTag);
+            lstUnitTags.Items.Clear();
+            lstUnitTags.DataSource = tags;
+            lstUnitTags.SelectedItems.Clear();
+
+            List<Equipment> equipment = new List<Equipment>();
+            foreach (Equipment eq in Equipment.EquipmentDatabase)
             {
-                lstUnitEquipment.Items.Add(equipment);
+                equipment.Add(eq);
             }
+
+            equipment.Sort();
+            lstUnitEquipment.Items.Clear();
+            lstUnitEquipment.DataSource = equipment;
+            lstUnitEquipment.SelectedItems.Clear();
+
 
             btnAddUnit.Click += ClickHandler;
             btnNext.Click += DiffUnitHandler;
@@ -147,7 +161,7 @@ namespace TwilightCombatTracker
                 u.DrivingXP = newInitXP;
             }
 
-            Close();
+            //Close();
         }
 
         public void DiffUnitHandler(object sender, EventArgs e)

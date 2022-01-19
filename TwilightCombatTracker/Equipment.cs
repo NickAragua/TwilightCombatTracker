@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace TwilightCombatTracker
 {
-    public class Equipment
+    public class Equipment : IComparable
     {
         public static List<Equipment> EquipmentDatabase;
 
@@ -19,10 +19,12 @@ namespace TwilightCombatTracker
             nodInfantrySmallArms.Name = "Small Arms";
             nodInfantrySmallArms.Effects.Add(Tag.NoneOfTheAbove, -10);
             nodInfantrySmallArms.Effects.Add(Tag.FootInfantry, 0);
+            nodInfantrySmallArms.Effects.Add(Tag.Visceroid, -20);
             EquipmentDatabase.Add(nodInfantrySmallArms);
 
             Equipment standardSmallArms = new Equipment();
             standardSmallArms.Name = "Mixed Small Arms";
+            standardSmallArms.Effects.Add(Tag.Visceroid, -20);
             EquipmentDatabase.Add(standardSmallArms);
 
             Equipment nonCombatantSmallArms = new Equipment();
@@ -34,7 +36,7 @@ namespace TwilightCombatTracker
             infantryRockets.Name = "Rockets";
             infantryRockets.Effects.Add(Tag.Vehicle, +15);
             infantryRockets.Effects.Add(Tag.Aircraft, +15);
-            nonCombatantSmallArms.Effects.Add(Tag.FootInfantry, -15);
+            infantryRockets.Effects.Add(Tag.FootInfantry, -15);
             EquipmentDatabase.Add(infantryRockets);
 
             Equipment nodInfantryRockets = new Equipment();
@@ -53,6 +55,7 @@ namespace TwilightCombatTracker
             nodBuggyMG.Name = "Buggy MG";
             nodBuggyMG.Effects.Add(Tag.NoneOfTheAbove, -10);
             nodBuggyMG.Effects.Add(Tag.FootInfantry, 0);
+            nodBuggyMG.Effects.Add(Tag.Visceroid, -20);
             EquipmentDatabase.Add(nodBuggyMG);
 
             Equipment infantryGrenades = new Equipment();
@@ -81,6 +84,7 @@ namespace TwilightCombatTracker
             apcMinigun.Name = "APC Minigun";
             apcMinigun.Effects.Add(Tag.Armored, -5);
             apcMinigun.Effects.Add(Tag.FootInfantry, 10);
+            apcMinigun.Effects.Add(Tag.Visceroid, -20);
             EquipmentDatabase.Add(apcMinigun);
 
             Equipment apcRocket = new Equipment();
@@ -117,6 +121,7 @@ namespace TwilightCombatTracker
             Equipment predatorRailgun = new Equipment();
             predatorRailgun.Name = "Railgun";
             predatorRailgun.Effects.Add(Tag.Vehicle, 20);
+            predatorRailgun.Effects.Add(Tag.Visceroid, -20);
             EquipmentDatabase.Add(predatorRailgun);
 
             // Scorpion Equipment
@@ -125,29 +130,34 @@ namespace TwilightCombatTracker
             scorpionTurret.Name = "105mm Cannon";
             scorpionTurret.Effects.Add(Tag.Vehicle, 15);
             scorpionTurret.Effects.Add(Tag.Armored, -15);
+            scorpionTurret.Effects.Add(Tag.Visceroid, -20);
             EquipmentDatabase.Add(scorpionTurret);
 
             // Turret Equipment
             Equipment turretMG = new Equipment();
             turretMG.Name = "Turret MG";
             turretMG.Effects.Add(Tag.FootInfantry, 5);
+            turretMG.Effects.Add(Tag.Visceroid, -20);
             EquipmentDatabase.Add(turretMG);
 
             Equipment turretRailgun = new Equipment();
             turretRailgun.Name = "Turret Railgun";
             turretRailgun.Effects.Add(Tag.Vehicle, 10);
+            turretRailgun.Effects.Add(Tag.Visceroid, -20);
             EquipmentDatabase.Add(turretRailgun);
 
             Equipment turretAA = new Equipment();
             turretAA.Name = "Turret AA";
             turretAA.Effects.Add(Tag.NoneOfTheAbove, -10);
             turretAA.Effects.Add(Tag.Aircraft, 10);
+            turretAA.Effects.Add(Tag.Visceroid, -20);
             EquipmentDatabase.Add(turretAA);
 
             Equipment turretCannon = new Equipment();
             turretCannon.Name = "105mm turret";
             turretCannon.Effects.Add(Tag.Vehicle, 5);
             turretCannon.Effects.Add(Tag.FootInfantry, -5);
+            turretCannon.Effects.Add(Tag.Visceroid, -20);
             EquipmentDatabase.Add(turretCannon);
 
             // Special case:
@@ -155,6 +165,11 @@ namespace TwilightCombatTracker
             unarmed.Name = "Unarmed";
             unarmed.Effects.Add(Tag.NoDamage, 0);
             EquipmentDatabase.Add(unarmed);
+
+            Equipment visceroidSpray = new Equipment();
+            visceroidSpray.Name = "Visceroid Spray";
+            visceroidSpray.Effects.Add(Tag.FootInfantry, +20);
+            EquipmentDatabase.Add(visceroidSpray);
         }
 
 
@@ -229,6 +244,16 @@ namespace TwilightCombatTracker
         public override int GetHashCode()
         {
             return Name.GetHashCode();
+        }
+
+        public int CompareTo(object other)
+        {
+            if (!(other is Equipment))
+            {
+                return 0;
+            }
+
+            return Name.CompareTo(((Equipment) other).Name);
         }
     }
 }

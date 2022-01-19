@@ -71,13 +71,10 @@ namespace TwilightCombatTracker
 
             String attacker = Attacker.Unit.getApplicableModifierString(Defender.Unit, Attacker.Equipment, supportDivider);
 
-            String defenderSandbagString = Defender.Unit.ExternalTags.Contains(Tag.Sandbags) &&
-                Defender.Unit.Tags.Contains(Tag.FootInfantry) ? " + 5 (sandbags)" : "";
-
             // if it is a supporting engagement, we do not display the defenders mods/etc
             String defender = IsSupportingEngagement ?
                 "" :
-                $"{Defender.Unit.getApplicableModifierString(Attacker.Unit, Defender.Equipment, 1)}{defenderSandbagString}";
+                $"{Defender.Unit.getApplicableModifierString(Attacker.Unit, Defender.Equipment, 1)}";
 
             String vsString = IsSupportingEngagement ? "" : " vs\r\n1d100";
 
@@ -163,10 +160,7 @@ namespace TwilightCombatTracker
             }
 
             int defenderRoll = random.Next(1, 100);
-            // special case: defensive infantry benefit from sandbags
-            int sandbags = Defender.Unit.ExternalTags.Contains(Tag.Sandbags) &&
-                Defender.Unit.Tags.Contains(Tag.FootInfantry) ? 5 : 0;
-            int defenderPreSupportResult = defenderRoll + Defender.Unit.getApplicableModifier(Attacker.Unit, Defender.Equipment) + sandbags;
+            int defenderPreSupportResult = defenderRoll + Defender.Unit.getApplicableModifier(Attacker.Unit, Defender.Equipment);
             int defenderPostSupportResult = defenderPreSupportResult;
             foreach (int supportingAttack in SupportingDefenders.Values)
             {
@@ -195,12 +189,12 @@ namespace TwilightCombatTracker
             // attacker wins
             if (attackerPostSupportResult > defenderPostSupportResult)
             {
-                ProcessDamage(Attacker.Unit, Attacker.Equipment, Defender.Unit, damage, result);
+                ProcessDamage(Attacker.Unit, Attacker.Equipment, Defender.Unit, damage, result, random);
             }
             // defender wins
             else if (attackerPostSupportResult < defenderPostSupportResult)
             {
-                ProcessDamage(Defender.Unit, Defender.Equipment, Attacker.Unit, damage, result);
+                ProcessDamage(Defender.Unit, Defender.Equipment, Attacker.Unit, damage, result, random);
             }
             // tie
             else
@@ -221,11 +215,24 @@ namespace TwilightCombatTracker
             return result.ToString();
         }
 
-        private void ProcessDamage(Unit shooter, Equipment shooterWeapon, Unit victim, int damage, StringBuilder result)
+        private void ProcessDamage(Unit shooter, Equipment shooterWeapon, Unit victim, int damage, StringBuilder result, Random random)
         {
             // update XP; we learn more from failures
             shooter.GunneryXP++;
             victim.GunneryXP += 2;
+
+            if (victim.Tags.Contains(Tag.Hologram) ||
+                victim.Bunker?.Tags?.Contains(Tag.Hologram) == true)
+            {
+                int holoRoll = random.Next(1, 101);
+                if (holoRoll <= 50)
+                {
+                    result.AppendLine("Target is using hologram; hologram hit and disappears; damage negated");
+                    victim.Tags.Remove(Tag.Hologram);
+                    victim.Bunker?.Tags?.Remove(Tag.Hologram);
+                    return;
+                }
+            }
 
             // if a unit is bunkered up, the bunker absorbs the damage instead
             Boolean victimInBunker = victim.Bunker != null && !shooterWeapon.Effects.ContainsKey(Tag.BunkerClearance);
@@ -272,7 +279,8 @@ namespace TwilightCombatTracker
             // ablative plating degrades when you are hit
             if (effectiveVictim.Tags.Contains(Tag.AblativePlating))
             {
-                result.Append($";Ablative Plating Degraded.");
+                result.Append($"Ablative Plating Degraded.");
+                effectiveVictim.Tags.Remove(Tag.AblativePlating);
             }
         }
     }
