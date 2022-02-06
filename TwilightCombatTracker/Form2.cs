@@ -24,7 +24,6 @@ namespace TwilightCombatTracker
             this.parent = parent;
             this.bluFor = blufor;
             this.Text = $"Edit {unit.Name}";
-            btnAddUnit.Text = "Save";
             
             // SetUpUI relies on currentUnit being set
             currentUnit = unit;
@@ -39,7 +38,7 @@ namespace TwilightCombatTracker
 
             this.bluFor = bluFor;
             this.parent = parent;
-            this.Text = bluFor ? "Add Blufor Unit" : "Add Opfor Unit";
+            Text = bluFor ? "Add Blufor Unit" : "Add Opfor Unit";
 
             SetUpUI();
         }
@@ -69,10 +68,13 @@ namespace TwilightCombatTracker
             lstUnitEquipment.DataSource = equipment;
             lstUnitEquipment.SelectedItems.Clear();
 
-
+            btnSaveUnit.Enabled = currentUnit != null;
             btnAddUnit.Click += ClickHandler;
+            btnSaveUnit.Click += ClickHandler;
             btnNext.Click += DiffUnitHandler;
             btnPrev.Click += DiffUnitHandler;
+            btnNext.Enabled = currentUnit != null;
+            btnPrev.Enabled = currentUnit != null;
         }
 
         public void PopulateEntryFields()
@@ -114,7 +116,8 @@ namespace TwilightCombatTracker
 
         public void ClickHandler(object sender, EventArgs e)
         {
-            Unit u = currentUnit == null ? new Unit() : currentUnit;
+            bool newUnit = currentUnit == null || sender == btnAddUnit;
+            Unit u = newUnit ? new Unit() : currentUnit;
             u.Name = txtUnitName.Text;
             u.Speed = (int) numSpeed.Value;
             u.Health = (int)numHealth.Value;
@@ -161,14 +164,19 @@ namespace TwilightCombatTracker
                 u.DrivingXP = newInitXP;
             }
 
-            //Close();
+            if (!newUnit)
+            {
+                Close();
+            }
         }
 
         public void DiffUnitHandler(object sender, EventArgs e)
         {
             currentUnit = parent.GetUnit(bluFor, sender == btnNext);
-
-            PopulateEntryFields();
+            if (currentUnit != null)
+            {
+                PopulateEntryFields();
+            }
         }
     }
 }

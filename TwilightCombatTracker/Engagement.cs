@@ -171,6 +171,8 @@ namespace TwilightCombatTracker
             result.AppendLine($"{attackerRoll} -> {attackerPreSupportResult} -> {attackerPostSupportResult} vs");
             result.AppendLine($"{defenderRoll} -> {defenderPreSupportResult} -> {defenderPostSupportResult}");
 
+            bool attackerCrit = attackerRoll == 100 || attackerPostSupportResult > 100;
+
             // work out stuns: natural 1s, natural 100s, or if the roll goes "out of bounds" after modifiers
             if (attackerRoll == 1 || attackerPostSupportResult < 1 || defenderRoll == 100 || defenderPostSupportResult > 100)
             {
@@ -178,7 +180,7 @@ namespace TwilightCombatTracker
                 result.AppendLine($"{Attacker.Unit} stunned!");
             }
 
-            if (defenderRoll == 1 || defenderPostSupportResult < 1 || attackerRoll == 100 || attackerPostSupportResult > 100)
+            if (defenderRoll == 1 || defenderPostSupportResult < 1 || attackerCrit)
             {
                 Defender.Unit.Tags.Add(Tag.StunPending);
                 result.AppendLine($"{Defender.Unit} stunned!");
@@ -189,12 +191,12 @@ namespace TwilightCombatTracker
             // attacker wins
             if (attackerPostSupportResult > defenderPostSupportResult)
             {
-                ProcessDamage(Attacker.Unit, Attacker.Equipment, Defender.Unit, damage, result, random);
+                ProcessDamage(Attacker.Unit, Attacker.Equipment, Defender.Unit, damage, result, random, attackerCrit);
             }
             // defender wins
             else if (attackerPostSupportResult < defenderPostSupportResult)
             {
-                ProcessDamage(Defender.Unit, Defender.Equipment, Attacker.Unit, damage, result, random);
+                ProcessDamage(Defender.Unit, Defender.Equipment, Attacker.Unit, damage, result, random, attackerCrit);
             }
             // tie
             else
@@ -215,23 +217,27 @@ namespace TwilightCombatTracker
             return result.ToString();
         }
 
-        private void ProcessDamage(Unit shooter, Equipment shooterWeapon, Unit victim, int damage, StringBuilder result, Random random)
+        private void ProcessDamage(Unit shooter, Equipment shooterWeapon, Unit victim, int damage, StringBuilder result, 
+            Random random, bool attackerCrit)
         {
             // update XP; we learn more from failures
             shooter.GunneryXP++;
             victim.GunneryXP += 2;
 
-            if (victim.Tags.Contains(Tag.Hologram) ||
-                victim.Bunker?.Tags?.Contains(Tag.Hologram) == true)
+            if (ProcessHologram(victim, result, random))
             {
-                int holoRoll = random.Next(1, 101);
-                if (holoRoll <= 50)
-                {
-                    result.AppendLine("Target is using hologram; hologram hit and disappears; damage negated");
-                    victim.Tags.Remove(Tag.Hologram);
-                    victim.Bunker?.Tags?.Remove(Tag.Hologram);
-                    return;
-                }
+                return;
+            }
+
+            if (ProcessSniperFire(result))
+            {
+                return;
+            }
+
+            if (victim.Tags.Contains(Tag.Aircraft) && !shooterWeapon.Effects.ContainsKey(Tag.Aircraft))
+            {
+                result.AppendLine("Aircraft can only be targeted by anti-air weapons.");
+                return;
             }
 
             // if a unit is bunkered up, the bunker absorbs the damage instead
@@ -239,6 +245,15 @@ namespace TwilightCombatTracker
             Boolean bunkerClearance = victim.Bunker != null && shooterWeapon.Effects.ContainsKey(Tag.BunkerClearance);
 
             Unit effectiveVictim = victimInBunker ? victim.Bunker : victim;
+
+            if (!shooterWeapon.hasAnyApplicableModifiers(effectiveVictim) && 
+                shooterWeapon.Effects.ContainsKey(Tag.NoneOfTheAbove) &&
+                shooterWeapon.Effects[Tag.NoneOfTheAbove] == Equipment.NO_EFFECT)
+            {
+                result.AppendLine("Weapon completely ineffective against target; no damage");
+                return;
+            }
+
             if (victimInBunker)
             {
                 result.AppendLine($"{victim.Name} is sheltered in {effectiveVictim.Name};");
@@ -263,6 +278,20 @@ namespace TwilightCombatTracker
                 victim.Health = 0;
                 victim.Tags.Add(Tag.DestructionPending);
             }
+            else if (shooterWeapon.Effects.ContainsKey(Tag.SniperLogic) && 
+                (victim.HasTag(Tag.Armored) || !victim.HasTag(Tag.FootInfantry)))
+            {
+                if (attackerCrit)
+                {
+                    result.AppendLine("Operator(s) sniped; non-infantry unit eliminated");
+                    victim.Health = 0;
+                    victim.Tags.Add(Tag.DestructionPending);
+                }
+                else
+                {
+                    result.AppendLine("Sniper fire has no effect against non-infantry target");
+                }
+            }
             else
             {
                 effectiveVictim.Health -= damage;
@@ -282,6 +311,54 @@ namespace TwilightCombatTracker
                 result.Append($"Ablative Plating Degraded.");
                 effectiveVictim.Tags.Remove(Tag.AblativePlating);
             }
+        }
+
+        /// <summary>
+        /// Do a hologram check for the given unit; append the results to the given stringbuilder.
+        /// Needs an RNG as well.
+        /// </summary>
+        private bool ProcessHologram(Unit victim, StringBuilder result, Random random)
+        {
+            if (victim.Tags.Contains(Tag.Hologram) ||
+                victim.Bunker?.Tags?.Contains(Tag.Hologram) == true)
+            {
+                int holoRoll = random.Next(1, 101);
+                result.AppendLine($"Hologram Roll {holoRoll}");
+                if (holoRoll <= 50)
+                {
+                    result.AppendLine("Target is using hologram; hologram hit and disappears; damage negated");
+                    victim.Tags.Remove(Tag.Hologram);
+                    victim.Bunker?.Tags?.Remove(Tag.Hologram);
+                    return true;
+                } 
+                else
+                {
+                    result.AppendLine("Target is using hologram; actual target hit.");
+                }
+            }
+
+            return false;
+        }
+
+        private bool ProcessSniperFire(StringBuilder result)
+        {
+            // rules: engagement attacker has to be the sniper; engagement cannot have any other hostiles in it
+            if (Attacker.Equipment.Effects.ContainsKey(Tag.SniperLogic) &&
+                Defender.Unit.HasTag(Tag.FootInfantry) &&
+                !Defender.Unit.HasTag(Tag.Armored) &&
+                SupportingDefenders.Count == 0)
+            {
+                result.AppendLine("Sniper automatically destroys unarmored infantry target.");
+                Defender.Unit.Health = 0;
+                Defender.Unit.Tags.Add(Tag.DestructionPending);
+                return true;
+            }
+            else if (Attacker.Equipment.Effects.ContainsKey(Tag.SniperLogic))
+            {
+                result.AppendLine("Defender supported, armored or not infantry; engaging as normal.");
+            }
+
+            return false;
         }
     }
 }

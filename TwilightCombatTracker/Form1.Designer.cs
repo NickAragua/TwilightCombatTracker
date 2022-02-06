@@ -55,11 +55,13 @@ namespace TwilightCombatTracker
             this.btnDeleteRed = new System.Windows.Forms.Button();
             this.btnDefectRed = new System.Windows.Forms.Button();
             this.btnDefectBlue = new System.Windows.Forms.Button();
+            this.chkClearOnLoad = new System.Windows.Forms.CheckBox();
             this.SuspendLayout();
             // 
             // lstBlueFor
             // 
             this.lstBlueFor.FormattingEnabled = true;
+            this.lstBlueFor.HorizontalScrollbar = true;
             this.lstBlueFor.Location = new System.Drawing.Point(0, 0);
             this.lstBlueFor.Name = "lstBlueFor";
             this.lstBlueFor.Size = new System.Drawing.Size(158, 290);
@@ -68,6 +70,7 @@ namespace TwilightCombatTracker
             // lstOpfor
             // 
             this.lstOpfor.FormattingEnabled = true;
+            this.lstOpfor.HorizontalScrollbar = true;
             this.lstOpfor.Location = new System.Drawing.Point(164, 0);
             this.lstOpfor.Name = "lstOpfor";
             this.lstOpfor.Size = new System.Drawing.Size(164, 290);
@@ -291,6 +294,16 @@ namespace TwilightCombatTracker
             this.btnDefectBlue.Text = "Defect";
             this.btnDefectBlue.UseVisualStyleBackColor = true;
             // 
+            // chkClearOnLoad
+            // 
+            this.chkClearOnLoad.AutoSize = true;
+            this.chkClearOnLoad.Location = new System.Drawing.Point(351, 327);
+            this.chkClearOnLoad.Name = "chkClearOnLoad";
+            this.chkClearOnLoad.Size = new System.Drawing.Size(141, 17);
+            this.chkClearOnLoad.TabIndex = 26;
+            this.chkClearOnLoad.Text = "Clear Force List on Load";
+            this.chkClearOnLoad.UseVisualStyleBackColor = true;
+            // 
             // frmCombatTracker
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -298,6 +311,7 @@ namespace TwilightCombatTracker
             this.AutoSize = true;
             this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.ClientSize = new System.Drawing.Size(1195, 410);
+            this.Controls.Add(this.chkClearOnLoad);
             this.Controls.Add(this.btnDefectBlue);
             this.Controls.Add(this.btnDefectRed);
             this.Controls.Add(this.btnDeleteRed);
@@ -357,6 +371,7 @@ namespace TwilightCombatTracker
         private System.Windows.Forms.Button btnDeleteRed;
         private System.Windows.Forms.Button btnDefectRed;
         private System.Windows.Forms.Button btnDefectBlue;
+        private System.Windows.Forms.CheckBox chkClearOnLoad;
     }
 }
 

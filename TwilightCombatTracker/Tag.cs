@@ -102,7 +102,13 @@ namespace TwilightCombatTracker
         [Category("UnitPropertyTag")]
         Hologram = 38,
         [Category("UnitPropertyTag")]
-        Visceroid = 39
+        Visceroid = 39,
+        [Category("UnitPropertyTag")]
+        Stealth = 40,
+        [Category("UnitPropertyTag")]
+        Detector = 41,
+        [Category("EquipmentPropertyTag")]
+        SniperLogic = 42
     }
 
     public static class TagProperties {

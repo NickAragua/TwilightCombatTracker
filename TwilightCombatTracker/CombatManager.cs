@@ -357,34 +357,25 @@ namespace TwilightCombatTracker
             }
         }
 
-        public void DeserializeUnits(bool bluFor, string content)
+        public void DeserializeUnits(bool bluFor, string content, bool clearExisting)
         {
-            if (bluFor)
+            List<Unit> units = JsonConvert.DeserializeObject<List<Unit>>(content);
+            List<Unit> activeUnitList = bluFor ? BluForUnits : OpForUnits;
+
+            if (clearExisting)
             {
-                BluForUnits = JsonConvert.DeserializeObject<List<Unit>>(content);
+                activeUnitList.Clear();
+            } 
+            
+            activeUnitList.AddRange(units);
 
-                foreach (Unit unit in BluForUnits)
-                {
-                    unit.Tags.Add(Tag.GDI);
-
-                    if (!unitNameLookup.ContainsKey(unit.Name))
-                    {
-                        unitNameLookup.Add(unit.Name, unit);
-                    }
-                }
-            }
-            else
+            foreach (Unit unit in activeUnitList)
             {
-                OpForUnits = JsonConvert.DeserializeObject<List<Unit>>(content);
-                
-                foreach (Unit unit in OpForUnits)
-                {
-                    unit.Tags.Add(Tag.Nod);
+                unit.Tags.Add(bluFor ? Tag.GDI : Tag.Nod);
 
-                    if (!unitNameLookup.ContainsKey(unit.Name))
-                    {
-                        unitNameLookup.Add(unit.Name, unit);
-                    }
+                if (!unitNameLookup.ContainsKey(unit.Name))
+                {
+                    unitNameLookup.Add(unit.Name, unit);
                 }
             }
 

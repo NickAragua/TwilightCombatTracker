@@ -44,6 +44,7 @@ namespace TwilightCombatTracker
             this.label4 = new System.Windows.Forms.Label();
             this.btnNext = new System.Windows.Forms.Button();
             this.btnPrev = new System.Windows.Forms.Button();
+            this.btnSaveUnit = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.numSpeed)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numHealth)).BeginInit();
             this.SuspendLayout();
@@ -176,6 +177,7 @@ namespace TwilightCombatTracker
             // 
             // btnNext
             // 
+            this.btnNext.Enabled = false;
             this.btnNext.Location = new System.Drawing.Point(143, 398);
             this.btnNext.Name = "btnNext";
             this.btnNext.Size = new System.Drawing.Size(41, 23);
@@ -185,6 +187,7 @@ namespace TwilightCombatTracker
             // 
             // btnPrev
             // 
+            this.btnPrev.Enabled = false;
             this.btnPrev.Location = new System.Drawing.Point(93, 398);
             this.btnPrev.Name = "btnPrev";
             this.btnPrev.Size = new System.Drawing.Size(44, 23);
@@ -192,11 +195,21 @@ namespace TwilightCombatTracker
             this.btnPrev.Text = "Prev";
             this.btnPrev.UseVisualStyleBackColor = true;
             // 
+            // btnSaveUnit
+            // 
+            this.btnSaveUnit.Location = new System.Drawing.Point(12, 427);
+            this.btnSaveUnit.Name = "btnSaveUnit";
+            this.btnSaveUnit.Size = new System.Drawing.Size(75, 23);
+            this.btnSaveUnit.TabIndex = 16;
+            this.btnSaveUnit.Text = "Save Unit";
+            this.btnSaveUnit.UseVisualStyleBackColor = true;
+            // 
             // frmAddUnit
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(190, 433);
+            this.ClientSize = new System.Drawing.Size(190, 455);
+            this.Controls.Add(this.btnSaveUnit);
             this.Controls.Add(this.btnPrev);
             this.Controls.Add(this.btnNext);
             this.Controls.Add(this.label4);
@@ -238,5 +251,6 @@ namespace TwilightCombatTracker
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Button btnNext;
         private System.Windows.Forms.Button btnPrev;
+        private System.Windows.Forms.Button btnSaveUnit;
     }
 }

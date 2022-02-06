@@ -225,7 +225,7 @@ namespace TwilightCombatTracker
                 {
                     using (StreamReader sr = new StreamReader(fileStream))
                     {
-                        combatManager.DeserializeUnits(bluFor, sr.ReadToEnd());
+                        combatManager.DeserializeUnits(bluFor, sr.ReadToEnd(), chkClearOnLoad.Checked);
                     }
                 }
 
@@ -325,7 +325,7 @@ namespace TwilightCombatTracker
                 list.SelectedIndex = nextIndex;
             }
 
-            return ((UnitEquipmentTuple) list.SelectedItem).Unit;
+            return ((UnitEquipmentTuple) list?.SelectedItem)?.Unit;
         }
 
         private void ClearLog(Object sender, EventArgs e)

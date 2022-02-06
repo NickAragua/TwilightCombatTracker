@@ -8,6 +8,8 @@ namespace TwilightCombatTracker
 {
     public class Equipment : IComparable
     {
+        public const int NO_EFFECT = -999;
+
         public static List<Equipment> EquipmentDatabase;
 
         static Equipment() 
@@ -42,6 +44,7 @@ namespace TwilightCombatTracker
             Equipment nodInfantryRockets = new Equipment();
             nodInfantryRockets.Name = "Nod Rockets";
             nodInfantryRockets.Effects.Add(Tag.FootInfantry, -10);
+            nodInfantryRockets.Effects.Add(Tag.Aircraft, 0);
             EquipmentDatabase.Add(nodInfantryRockets);
 
             Equipment nodInfernoRockets = new Equipment();
@@ -62,7 +65,6 @@ namespace TwilightCombatTracker
             infantryGrenades.Name = "Grenades";
             infantryGrenades.Effects.Add(Tag.FastSpeed, -15);
             infantryGrenades.Effects.Add(Tag.Armored, -15);
-            infantryGrenades.Effects.Add(Tag.Aircraft, -15);
             infantryGrenades.Effects.Add(Tag.FootInfantry, 15);
             infantryGrenades.Effects.Add(Tag.BunkerClearance, 0);
             EquipmentDatabase.Add(infantryGrenades);
@@ -70,7 +72,6 @@ namespace TwilightCombatTracker
             Equipment infantryFlamer = new Equipment();
             infantryFlamer.Name = "Infantry Flamer";
             infantryFlamer.Effects.Add(Tag.FootInfantry, +15);
-            infantryFlamer.Effects.Add(Tag.Aircraft, -15);
             infantryFlamer.Effects.Add(Tag.BunkerClearance, 0);
             EquipmentDatabase.Add(infantryFlamer);
 
@@ -79,12 +80,18 @@ namespace TwilightCombatTracker
             nodHandLaser.Effects.Add(Tag.Laser, 0);
             EquipmentDatabase.Add(nodHandLaser);
 
+            Equipment sniperRifle = new Equipment();
+            sniperRifle.Name = "Sniper Rifle";
+            sniperRifle.Effects.Add(Tag.SniperLogic, 0); //insta-kill infantry, no damage vs anything else except on crit
+            EquipmentDatabase.Add(sniperRifle);
+
             // APC Equipment
             Equipment apcMinigun = new Equipment();
             apcMinigun.Name = "APC Minigun";
             apcMinigun.Effects.Add(Tag.Armored, -5);
             apcMinigun.Effects.Add(Tag.FootInfantry, 10);
             apcMinigun.Effects.Add(Tag.Visceroid, -20);
+            apcMinigun.Effects.Add(Tag.Aircraft, -5);
             EquipmentDatabase.Add(apcMinigun);
 
             Equipment apcRocket = new Equipment();
@@ -133,6 +140,13 @@ namespace TwilightCombatTracker
             scorpionTurret.Effects.Add(Tag.Visceroid, -20);
             EquipmentDatabase.Add(scorpionTurret);
 
+            // flame tank equipment
+            Equipment tankFlamer = new Equipment();
+            tankFlamer.Name = "Flamer";
+            tankFlamer.Effects.Add(Tag.FootInfantry, 30);
+            tankFlamer.Effects.Add(Tag.BunkerClearance, 0);
+            EquipmentDatabase.Add(tankFlamer);
+
             // Turret Equipment
             Equipment turretMG = new Equipment();
             turretMG.Name = "Turret MG";
@@ -148,9 +162,8 @@ namespace TwilightCombatTracker
 
             Equipment turretAA = new Equipment();
             turretAA.Name = "Turret AA";
-            turretAA.Effects.Add(Tag.NoneOfTheAbove, -10);
+            turretAA.Effects.Add(Tag.NoneOfTheAbove, NO_EFFECT);
             turretAA.Effects.Add(Tag.Aircraft, 10);
-            turretAA.Effects.Add(Tag.Visceroid, -20);
             EquipmentDatabase.Add(turretAA);
 
             Equipment turretCannon = new Equipment();
@@ -194,7 +207,7 @@ namespace TwilightCombatTracker
                 }
             }
 
-            if (!modFound && Effects.ContainsKey(Tag.NoneOfTheAbove))
+            if (!modFound && Effects.ContainsKey(Tag.NoneOfTheAbove) && Effects[Tag.NoneOfTheAbove] != NO_EFFECT)
             {
                 mod += Effects[Tag.NoneOfTheAbove];
             }
@@ -219,7 +232,8 @@ namespace TwilightCombatTracker
                 }
             }
 
-            if (!modFound && Effects.ContainsKey(Tag.NoneOfTheAbove))
+            // if we no other mods and a "none of the above" tag that's not "NO EFFECT"
+            if (!modFound && Effects.ContainsKey(Tag.NoneOfTheAbove) && Effects[Tag.NoneOfTheAbove] != NO_EFFECT)
             {
                 sb.AppendFormat("{0}{1} ({2}{3})", Effects[Tag.NoneOfTheAbove] >= 0 ? "+" : "", 
                     Effects[Tag.NoneOfTheAbove], 
@@ -228,6 +242,23 @@ namespace TwilightCombatTracker
             }
 
             return sb.ToString();
+        }
+
+        /// <summary>
+        /// Does this piece of equipment have any modifiers that are applicable to the unit in question.
+        /// Useful to determine if "None of the Above" should be applied.
+        /// </summary>
+        public bool hasAnyApplicableModifiers(Unit unit)
+        {
+            foreach (Tag tag in unit.Tags)
+            {
+                if (Effects.ContainsKey(tag))
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
 
         public override string ToString()
