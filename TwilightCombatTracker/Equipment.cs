@@ -39,12 +39,14 @@ namespace TwilightCombatTracker
             infantryRockets.Effects.Add(Tag.Vehicle, +15);
             infantryRockets.Effects.Add(Tag.Aircraft, +15);
             infantryRockets.Effects.Add(Tag.FootInfantry, -15);
+            infantryRockets.Effects.Add(Tag.PointDefenseUseful, 0);
             EquipmentDatabase.Add(infantryRockets);
 
             Equipment nodInfantryRockets = new Equipment();
             nodInfantryRockets.Name = "Nod Rockets";
             nodInfantryRockets.Effects.Add(Tag.FootInfantry, -10);
             nodInfantryRockets.Effects.Add(Tag.Aircraft, 0);
+            nodInfantryRockets.Effects.Add(Tag.PointDefenseUseful, 0);
             EquipmentDatabase.Add(nodInfantryRockets);
 
             Equipment nodInfernoRockets = new Equipment();
@@ -52,6 +54,7 @@ namespace TwilightCombatTracker
             nodInfernoRockets.Effects.Add(Tag.NoneOfTheAbove, -10);
             nodInfernoRockets.Effects.Add(Tag.Structure, 0);
             nodInfernoRockets.Effects.Add(Tag.FootInfantry, 0);
+            nodInfernoRockets.Effects.Add(Tag.PointDefenseUseful, 0);
             EquipmentDatabase.Add(nodInfernoRockets);
 
             Equipment nodBuggyMG = new Equipment();
@@ -60,6 +63,12 @@ namespace TwilightCombatTracker
             nodBuggyMG.Effects.Add(Tag.FootInfantry, 0);
             nodBuggyMG.Effects.Add(Tag.Visceroid, -20);
             EquipmentDatabase.Add(nodBuggyMG);
+
+            Equipment nodBuggyLaser = new Equipment();
+            nodBuggyLaser.Name = "Buggy Laser";
+            nodBuggyLaser.Effects.Add(Tag.Laser, 0);
+            nodBuggyLaser.Effects.Add(Tag.Aircraft, 0);
+            EquipmentDatabase.Add(nodBuggyLaser);
 
             Equipment infantryGrenades = new Equipment();
             infantryGrenades.Name = "Grenades";
@@ -73,6 +82,7 @@ namespace TwilightCombatTracker
             infantryFlamer.Name = "Infantry Flamer";
             infantryFlamer.Effects.Add(Tag.FootInfantry, +15);
             infantryFlamer.Effects.Add(Tag.BunkerClearance, 0);
+            infantryFlamer.Effects.Add(Tag.Visceroid, +15);
             EquipmentDatabase.Add(infantryFlamer);
 
             Equipment nodHandLaser = new Equipment();
@@ -99,6 +109,7 @@ namespace TwilightCombatTracker
             apcRocket.Effects.Add(Tag.FastSpeed, 10);
             apcRocket.Effects.Add(Tag.Aircraft, 10);
             apcRocket.Effects.Add(Tag.FootInfantry, -5);
+            apcRocket.Effects.Add(Tag.PointDefenseUseful, 0);
             EquipmentDatabase.Add(apcRocket);
 
             Equipment apcGrenade = new Equipment();
@@ -115,6 +126,7 @@ namespace TwilightCombatTracker
             pitbullMissile.Effects.Add(Tag.Aircraft, 10);
             pitbullMissile.Effects.Add(Tag.FastSpeed, 10);
             pitbullMissile.Effects.Add(Tag.FootInfantry, -10);
+            pitbullMissile.Effects.Add(Tag.PointDefenseUseful, 0);
             EquipmentDatabase.Add(pitbullMissile);
 
             Equipment pitbullMortar = new Equipment();
@@ -138,13 +150,21 @@ namespace TwilightCombatTracker
             scorpionTurret.Effects.Add(Tag.Vehicle, 15);
             scorpionTurret.Effects.Add(Tag.Armored, -15);
             scorpionTurret.Effects.Add(Tag.Visceroid, -20);
+            scorpionTurret.Effects.Add(Tag.PointDefenseUseful, 0);
             EquipmentDatabase.Add(scorpionTurret);
+
+            Equipment scorpionLaser = new Equipment();
+            scorpionLaser.Name = "Scorpion Laser";
+            scorpionLaser.Effects.Add(Tag.Vehicle, 15);
+            scorpionLaser.Effects.Add(Tag.Laser, 0);
+            EquipmentDatabase.Add(scorpionLaser);
 
             // flame tank equipment
             Equipment tankFlamer = new Equipment();
             tankFlamer.Name = "Flamer";
             tankFlamer.Effects.Add(Tag.FootInfantry, 30);
             tankFlamer.Effects.Add(Tag.BunkerClearance, 0);
+            tankFlamer.Effects.Add(Tag.Visceroid, 30);
             EquipmentDatabase.Add(tankFlamer);
 
             // Turret Equipment
@@ -171,6 +191,7 @@ namespace TwilightCombatTracker
             turretCannon.Effects.Add(Tag.Vehicle, 5);
             turretCannon.Effects.Add(Tag.FootInfantry, -5);
             turretCannon.Effects.Add(Tag.Visceroid, -20);
+            turretCannon.Effects.Add(Tag.PointDefenseUseful, 0);
             EquipmentDatabase.Add(turretCannon);
 
             // Special case:
@@ -222,6 +243,8 @@ namespace TwilightCombatTracker
         {
             StringBuilder sb = new StringBuilder();
             bool modFound = false;
+
+            bool hasWeakRearArmor = unit.HasTag(Tag.WeakRearArmor);
 
             foreach (Tag tag in unit.Tags)
             {

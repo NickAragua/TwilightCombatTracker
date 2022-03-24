@@ -1,11 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace TwilightCombatTracker
@@ -17,6 +11,7 @@ namespace TwilightCombatTracker
         bool bluFor;
         frmCombatTracker parent;
         Unit currentUnit;
+        List<Specialization> currentSpecs = new List<Specialization>();
 
         public frmAddUnit(Unit unit, bool blufor, frmCombatTracker parent)
         {
@@ -57,6 +52,10 @@ namespace TwilightCombatTracker
             lstUnitTags.DataSource = tags;
             lstUnitTags.SelectedItems.Clear();
 
+            lstSpecTags.Items.Clear();
+            lstSpecTags.DataSource = new List<Tag>(tags);
+            lstSpecTags.SelectedItems.Clear();
+
             List<Equipment> equipment = new List<Equipment>();
             foreach (Equipment eq in Equipment.EquipmentDatabase)
             {
@@ -75,6 +74,13 @@ namespace TwilightCombatTracker
             btnPrev.Click += DiffUnitHandler;
             btnNext.Enabled = currentUnit != null;
             btnPrev.Enabled = currentUnit != null;
+            btnAddSpec.Enabled = false;
+            btnAddSpec.Click += btnAddSpecHandler;
+            btnRemoveSpec.Enabled = false;
+            btnRemoveSpec.Click += btnRemoveSpecHandler;
+
+            lstSpecTags.Click += lstSpecTagClickHandler;
+            lstSpecs.Click += lstSpecsClickHandler;
         }
 
         public void PopulateEntryFields()
@@ -111,6 +117,12 @@ namespace TwilightCombatTracker
             foreach (Equipment equipment in currentUnit.Weapons)
             {
                 lstUnitEquipment.SelectedItems.Add(equipment);
+            }
+
+            currentSpecs = currentUnit.Specializations;
+            foreach (Specialization spec in currentUnit.Specializations)
+            {
+                lstSpecs.Items.Add(spec);
             }
         }
 
@@ -164,6 +176,8 @@ namespace TwilightCombatTracker
                 u.DrivingXP = newInitXP;
             }
 
+            u.Specializations = currentSpecs;
+
             if (!newUnit)
             {
                 Close();
@@ -177,6 +191,41 @@ namespace TwilightCombatTracker
             {
                 PopulateEntryFields();
             }
+        }
+
+        public void btnAddSpecHandler(object sender, EventArgs e)
+        {
+            List<Tag> tags = new List<Tag>();
+
+            foreach (Tag tag in lstSpecTags.SelectedItems)
+            {
+                tags.Add(tag);
+            }
+
+            Specialization spec = new Specialization(tags, (int)spnSpecMod.Value);
+
+            currentSpecs.Add(spec);
+            lstSpecs.Items.Add(spec);
+            lstSpecTags.SelectedItems.Clear();
+            btnAddSpec.Enabled = false;
+        }
+
+        public void btnRemoveSpecHandler(object sender, EventArgs e)
+        {
+            currentSpecs.Remove((Specialization) lstSpecs.SelectedItem);
+            lstSpecs.Items.RemoveAt(lstSpecs.SelectedIndex);
+            lstSpecs.SelectedItems.Clear();
+            btnRemoveSpec.Enabled = false;
+        }
+
+        public void lstSpecTagClickHandler(object sender, EventArgs e)
+        {
+            btnAddSpec.Enabled = lstSpecTags.SelectedItems.Count > 0;
+        }
+
+        public void lstSpecsClickHandler(object sender, EventArgs e)
+        {
+            btnRemoveSpec.Enabled = lstSpecs.SelectedItems.Count > 0;
         }
     }
 }

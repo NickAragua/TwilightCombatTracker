@@ -19,7 +19,7 @@ namespace TwilightCombatTracker
         // equipment is a name and list of TAG -> Effect (e.g. VEHICLE = +5)
 
         public string Name { get; set; }
-        
+
         public int Health { get; set; }
 
         public int Speed { get; set; }
@@ -36,6 +36,12 @@ namespace TwilightCombatTracker
         /// "rocky terrain", "local commander", "comms"
         /// </summary>
         public HashSet<Tag> ExternalTags { get; set; }
+
+        /// <summary>
+        /// If the target being engaged has all the tags in the 'key'; they get the relevant modifier
+        /// </summary>
+        //public Dictionary<List<Tag>, int> Specialization {get; set; }
+        public List<Specialization> Specializations { get; set; }
 
         public int DrivingXP { get; set; }
 
@@ -55,6 +61,7 @@ namespace TwilightCombatTracker
             Tags = new HashSet<Tag>();
             Weapons = new HashSet<Equipment>();
             ExternalTags = new HashSet<Tag>();
+            Specializations = new List<Specialization>();
         }
 
         public String getApplicableModifierString(Unit other, Equipment specificWeapon, int supportDivider)
@@ -72,6 +79,27 @@ namespace TwilightCombatTracker
                 foreach (Equipment weapon in Weapons)
                 {
                     sb.Append(weapon.getModifierString(other));
+                }
+            }
+
+            // process specializations
+            foreach (Specialization spec in Specializations)
+            {
+                bool match = true;
+                StringBuilder tagList = new StringBuilder();
+
+                foreach (Tag criterion in spec.Tags)
+                {
+                    if (!other.Tags.Contains(criterion) && !other.ExternalTags.Contains(criterion))
+                    {
+                        match = false;
+                        break;
+                    }
+                }
+
+                if (match)
+                {
+                    sb.Append(spec.ToString());
                 }
             }
 
@@ -98,6 +126,26 @@ namespace TwilightCombatTracker
                 foreach (Equipment weapon in Weapons)
                 {
                     mod += weapon.getModifier(other);
+                }
+            }
+
+            // process specializations
+            foreach (Specialization spec in Specializations)
+            {
+                bool match = true;
+
+                foreach (Tag criterion in spec.Tags)
+                {
+                    if (!other.Tags.Contains(criterion))
+                    {
+                        match = false;
+                        break;
+                    }
+                }
+
+                if (match)
+                {
+                    mod += spec.Modifier;
                 }
             }
 
@@ -140,22 +188,22 @@ namespace TwilightCombatTracker
 
             if (HasTag(Tag.RemoteCommander))
             {
-                sb.Append(" -5 (remote commander)");
+                sb.Append(" - 5 (remote commander)");
             }
 
             if (HasTag(Tag.LocalCommander))
             {
-                sb.Append(" +10 (local commander)");
+                sb.Append(" + 10 (local commander)");
             }
 
             if (Tags.Contains(Tag.DugIn))
             {
-                sb.Append(" +10 (dug in)");
+                sb.Append(" + 10 (dug in)");
             }
 
             if (Tags.Contains(Tag.TunedUp))
             {
-                sb.Append(" +5 (tuned up)");
+                sb.Append(" + 5 (tuned up)");
             }
         }
 

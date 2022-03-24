@@ -45,8 +45,14 @@ namespace TwilightCombatTracker
             this.btnNext = new System.Windows.Forms.Button();
             this.btnPrev = new System.Windows.Forms.Button();
             this.btnSaveUnit = new System.Windows.Forms.Button();
+            this.lstSpecTags = new System.Windows.Forms.ListBox();
+            this.spnSpecMod = new System.Windows.Forms.NumericUpDown();
+            this.btnAddSpec = new System.Windows.Forms.Button();
+            this.lstSpecs = new System.Windows.Forms.ListBox();
+            this.btnRemoveSpec = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.numSpeed)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numHealth)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.spnSpecMod)).BeginInit();
             this.SuspendLayout();
             // 
             // txtUnitName
@@ -204,11 +210,58 @@ namespace TwilightCombatTracker
             this.btnSaveUnit.Text = "Save Unit";
             this.btnSaveUnit.UseVisualStyleBackColor = true;
             // 
+            // lstSpecTags
+            // 
+            this.lstSpecTags.FormattingEnabled = true;
+            this.lstSpecTags.Location = new System.Drawing.Point(190, 38);
+            this.lstSpecTags.Name = "lstSpecTags";
+            this.lstSpecTags.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended;
+            this.lstSpecTags.Size = new System.Drawing.Size(174, 95);
+            this.lstSpecTags.TabIndex = 17;
+            // 
+            // spnSpecMod
+            // 
+            this.spnSpecMod.Location = new System.Drawing.Point(190, 139);
+            this.spnSpecMod.Name = "spnSpecMod";
+            this.spnSpecMod.Size = new System.Drawing.Size(56, 20);
+            this.spnSpecMod.TabIndex = 18;
+            // 
+            // btnAddSpec
+            // 
+            this.btnAddSpec.Location = new System.Drawing.Point(252, 139);
+            this.btnAddSpec.Name = "btnAddSpec";
+            this.btnAddSpec.Size = new System.Drawing.Size(75, 23);
+            this.btnAddSpec.TabIndex = 19;
+            this.btnAddSpec.Text = "Add Spec";
+            this.btnAddSpec.UseVisualStyleBackColor = true;
+            // 
+            // lstSpecs
+            // 
+            this.lstSpecs.FormattingEnabled = true;
+            this.lstSpecs.Location = new System.Drawing.Point(191, 166);
+            this.lstSpecs.Name = "lstSpecs";
+            this.lstSpecs.Size = new System.Drawing.Size(173, 95);
+            this.lstSpecs.TabIndex = 20;
+            // 
+            // btnRemoveSpec
+            // 
+            this.btnRemoveSpec.Location = new System.Drawing.Point(190, 268);
+            this.btnRemoveSpec.Name = "btnRemoveSpec";
+            this.btnRemoveSpec.Size = new System.Drawing.Size(94, 23);
+            this.btnRemoveSpec.TabIndex = 21;
+            this.btnRemoveSpec.Text = "Remove Spec";
+            this.btnRemoveSpec.UseVisualStyleBackColor = true;
+            // 
             // frmAddUnit
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(190, 455);
+            this.ClientSize = new System.Drawing.Size(371, 455);
+            this.Controls.Add(this.btnRemoveSpec);
+            this.Controls.Add(this.lstSpecs);
+            this.Controls.Add(this.btnAddSpec);
+            this.Controls.Add(this.spnSpecMod);
+            this.Controls.Add(this.lstSpecTags);
             this.Controls.Add(this.btnSaveUnit);
             this.Controls.Add(this.btnPrev);
             this.Controls.Add(this.btnNext);
@@ -229,6 +282,7 @@ namespace TwilightCombatTracker
             this.Text = "Add/Edit Unit";
             ((System.ComponentModel.ISupportInitialize)(this.numSpeed)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numHealth)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.spnSpecMod)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -252,5 +306,10 @@ namespace TwilightCombatTracker
         private System.Windows.Forms.Button btnNext;
         private System.Windows.Forms.Button btnPrev;
         private System.Windows.Forms.Button btnSaveUnit;
+        private System.Windows.Forms.ListBox lstSpecTags;
+        private System.Windows.Forms.NumericUpDown spnSpecMod;
+        private System.Windows.Forms.Button btnAddSpec;
+        private System.Windows.Forms.ListBox lstSpecs;
+        private System.Windows.Forms.Button btnRemoveSpec;
     }
 }

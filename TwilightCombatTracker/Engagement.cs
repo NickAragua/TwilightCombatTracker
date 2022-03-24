@@ -108,14 +108,7 @@ namespace TwilightCombatTracker
             int attackerRoll = random.Next(1, 100);
             int attackerPreSupportResult = attackerRoll + Attacker.Unit.getApplicableModifier(Defender.Unit, Attacker.Equipment);
 
-            if (!Defender.Unit.Tags.Contains(Tag.WeakRearArmor))
-            {
-                supportResult = attackerPreSupportResult / supportDivider;
-            } 
-            else
-            {
-                supportResult = attackerPreSupportResult;
-            }
+            supportResult = attackerPreSupportResult / supportDivider;
 
             result.AppendLine(DetailedBreakdown());
 
@@ -162,10 +155,13 @@ namespace TwilightCombatTracker
             int defenderRoll = random.Next(1, 100);
             int defenderPreSupportResult = defenderRoll + Defender.Unit.getApplicableModifier(Attacker.Unit, Defender.Equipment);
             int defenderPostSupportResult = defenderPreSupportResult;
+
             foreach (int supportingAttack in SupportingDefenders.Values)
             {
                 defenderPostSupportResult += supportingAttack;
             }
+            
+            // think about laser PD handling
 
             result.AppendLine(DetailedBreakdown());
             result.AppendLine($"{attackerRoll} -> {attackerPreSupportResult} -> {attackerPostSupportResult} vs");
@@ -191,12 +187,22 @@ namespace TwilightCombatTracker
             // attacker wins
             if (attackerPostSupportResult > defenderPostSupportResult)
             {
-                ProcessDamage(Attacker.Unit, Attacker.Equipment, Defender.Unit, damage, result, random, attackerCrit);
+                int pdCount = getPointDefenseCount(Defender, SupportingDefenders.Keys.ToList());
+                int damageDiscount = getPointDefenseDamageDiscount(Defender, attackerPreSupportResult - defenderPreSupportResult,
+                    SupportingDefenders, pdCount, result);
+                int actualDamage = Math.Max(damage - damageDiscount, 0);
+
+                ProcessDamage(Attacker.Unit, Attacker.Equipment, Defender.Unit, actualDamage, result, random, attackerCrit);
             }
             // defender wins
             else if (attackerPostSupportResult < defenderPostSupportResult)
             {
-                ProcessDamage(Defender.Unit, Defender.Equipment, Attacker.Unit, damage, result, random, attackerCrit);
+                int pdCount = getPointDefenseCount(Attacker, SupportingAttackers.Keys.ToList());
+                int damageDiscount = getPointDefenseDamageDiscount(Attacker, defenderPreSupportResult - attackerPreSupportResult,
+                    SupportingAttackers, pdCount, result);
+                int actualDamage = Math.Max(damage - damageDiscount, 0);
+
+                ProcessDamage(Defender.Unit, Defender.Equipment, Attacker.Unit, actualDamage, result, random, attackerCrit);
             }
             // tie
             else
@@ -359,6 +365,65 @@ namespace TwilightCombatTracker
             }
 
             return false;
+        }
+
+        /// <summary>
+        /// Get a count of point defense systems in the given unit group
+        /// </summary>
+        private int getPointDefenseCount(UnitEquipmentTuple primaryUnit, List<UnitEquipmentTuple> units)
+        {
+            int pointDefenseCount = primaryUnit.Unit.Tags.Contains(Tag.PointDefenseLaser) ? 1 : 0;
+
+            foreach (var unit in units)
+            {
+                pointDefenseCount += unit.Unit.Tags.Contains(Tag.PointDefenseLaser) ? 1 : 0;
+            }
+
+            return pointDefenseCount;
+        }
+
+        /// <summary>
+        /// Given a primary unit, primary unit roll, supporting attack resolutions and a count of active PD systems
+        /// Give me how much damage we're losing here.
+        /// </summary>
+        private int getPointDefenseDamageDiscount(UnitEquipmentTuple primaryUnit, int primaryUnitRollDiff,
+            Dictionary<UnitEquipmentTuple, int> supportingUnits, int pdCount, StringBuilder result)
+        {
+            if (pdCount == 0)
+            {
+                return 0;
+            }
+
+            int pdUsed = 0;
+            int damageDiscount = 0;
+
+            if (primaryUnitRollDiff > 0 &&
+                primaryUnit.Equipment.Effects.ContainsKey(Tag.PointDefenseUseful))
+            {
+                pdUsed++;
+                damageDiscount = primaryUnitRollDiff;
+            }
+
+            foreach (UnitEquipmentTuple unit in supportingUnits.Keys)
+            {
+                if (pdUsed >= pdCount)
+                {
+                    break;
+                }
+
+                if (unit.Equipment.Effects.ContainsKey(Tag.PointDefenseUseful))
+                {
+                    pdUsed++;
+                    damageDiscount += supportingUnits[unit];
+                }
+            }
+
+            if (damageDiscount > 0)
+            {
+                result.AppendLine($"{damageDiscount} damage negated by point defense!");
+            }
+
+            return damageDiscount;
         }
     }
 }

@@ -108,7 +108,17 @@ namespace TwilightCombatTracker
         [Category("UnitPropertyTag")]
         Detector = 41,
         [Category("EquipmentPropertyTag")]
-        SniperLogic = 42
+        SniperLogic = 42,
+        [Category("TransientUnitPropertyTag")]
+        Attacker = 43,
+        [Category("TransientUnitPropertyTag")]
+        Defender = 44,
+        [Category("EnvironmentTag")]
+        OpenTerrain = 45,
+        [Category("UnitPropertyTag")]
+        PointDefenseLaser = 46,
+        [Category("EquipmentPropertyTag")]
+        PointDefenseUseful = 47
     }
 
     public static class TagProperties {
