@@ -56,6 +56,7 @@ namespace TwilightCombatTracker
             this.btnDefectRed = new System.Windows.Forms.Button();
             this.btnDefectBlue = new System.Windows.Forms.Button();
             this.chkClearOnLoad = new System.Windows.Forms.CheckBox();
+            this.chkAutoWithdraw = new System.Windows.Forms.CheckBox();
             this.SuspendLayout();
             // 
             // lstBlueFor
@@ -304,6 +305,16 @@ namespace TwilightCombatTracker
             this.chkClearOnLoad.Text = "Clear Force List on Load";
             this.chkClearOnLoad.UseVisualStyleBackColor = true;
             // 
+            // chkAutoWithdraw
+            // 
+            this.chkAutoWithdraw.AutoSize = true;
+            this.chkAutoWithdraw.Location = new System.Drawing.Point(351, 351);
+            this.chkAutoWithdraw.Name = "chkAutoWithdraw";
+            this.chkAutoWithdraw.Size = new System.Drawing.Size(137, 17);
+            this.chkAutoWithdraw.TabIndex = 27;
+            this.chkAutoWithdraw.Text = "Auto Withdraw at 50%?";
+            this.chkAutoWithdraw.UseVisualStyleBackColor = true;
+            // 
             // frmCombatTracker
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -311,6 +322,7 @@ namespace TwilightCombatTracker
             this.AutoSize = true;
             this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.ClientSize = new System.Drawing.Size(1195, 410);
+            this.Controls.Add(this.chkAutoWithdraw);
             this.Controls.Add(this.chkClearOnLoad);
             this.Controls.Add(this.btnDefectBlue);
             this.Controls.Add(this.btnDefectRed);
@@ -372,6 +384,7 @@ namespace TwilightCombatTracker
         private System.Windows.Forms.Button btnDefectRed;
         private System.Windows.Forms.Button btnDefectBlue;
         private System.Windows.Forms.CheckBox chkClearOnLoad;
+        private System.Windows.Forms.CheckBox chkAutoWithdraw;
     }
 }
 

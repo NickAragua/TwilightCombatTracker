@@ -194,6 +194,28 @@ namespace TwilightCombatTracker
             turretCannon.Effects.Add(Tag.PointDefenseUseful, 0);
             EquipmentDatabase.Add(turretCannon);
 
+            // aircraft Equipment:
+            Equipment orcaRockets = new Equipment();
+            orcaRockets.Name = "Orca Rockets";
+            orcaRockets.Effects.Add(Tag.Vehicle, +15);
+            orcaRockets.Effects.Add(Tag.Structure, +15);
+            orcaRockets.Effects.Add(Tag.FootInfantry, -15);
+            orcaRockets.Effects.Add(Tag.PointDefenseUseful, 0);
+            EquipmentDatabase.Add(orcaRockets);
+
+            Equipment orcaAAMissiles = new Equipment();
+            orcaAAMissiles.Name = "Orca AA Missiles";
+            orcaAAMissiles.Effects.Add(Tag.NoneOfTheAbove, NO_EFFECT);
+            orcaAAMissiles.Effects.Add(Tag.Aircraft, 10);
+            orcaAAMissiles.Effects.Add(Tag.PointDefenseUseful, 0);
+            EquipmentDatabase.Add(orcaAAMissiles);
+
+            Equipment venomMG = new Equipment();
+            venomMG.Name = "VenomMG";
+            venomMG.Effects.Add(Tag.Visceroid, -20);
+            venomMG.Effects.Add(Tag.Aircraft, 0);
+            EquipmentDatabase.Add(venomMG);
+
             // Special case:
             Equipment unarmed = new Equipment();
             unarmed.Name = "Unarmed";
@@ -204,6 +226,14 @@ namespace TwilightCombatTracker
             visceroidSpray.Name = "Visceroid Spray";
             visceroidSpray.Effects.Add(Tag.FootInfantry, +20);
             EquipmentDatabase.Add(visceroidSpray);
+
+            Equipment basicArtillery = new Equipment();
+            basicArtillery.Name = "Artillery";
+            basicArtillery.Effects.Add(Tag.Artillery, 0);
+            basicArtillery.Effects.Add(Tag.FootInfantry, +25);
+            basicArtillery.Effects.Add(Tag.Structure, +25);
+            basicArtillery.Effects.Add(Tag.PointDefenseUseful, 0);
+            EquipmentDatabase.Add(basicArtillery);
         }
 
 

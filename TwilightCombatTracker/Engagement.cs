@@ -161,8 +161,6 @@ namespace TwilightCombatTracker
                 defenderPostSupportResult += supportingAttack;
             }
             
-            // think about laser PD handling
-
             result.AppendLine(DetailedBreakdown());
             result.AppendLine($"{attackerRoll} -> {attackerPreSupportResult} -> {attackerPostSupportResult} vs");
             result.AppendLine($"{defenderRoll} -> {defenderPreSupportResult} -> {defenderPostSupportResult}");
@@ -188,17 +186,18 @@ namespace TwilightCombatTracker
             if (attackerPostSupportResult > defenderPostSupportResult)
             {
                 int pdCount = getPointDefenseCount(Defender, SupportingDefenders.Keys.ToList());
-                int damageDiscount = getPointDefenseDamageDiscount(Defender, attackerPreSupportResult - defenderPreSupportResult,
+                int damageDiscount = getPointDefenseDamageDiscount(Attacker, attackerPreSupportResult - defenderPreSupportResult,
                     SupportingDefenders, pdCount, result);
                 int actualDamage = Math.Max(damage - damageDiscount, 0);
 
                 ProcessDamage(Attacker.Unit, Attacker.Equipment, Defender.Unit, actualDamage, result, random, attackerCrit);
             }
             // defender wins
-            else if (attackerPostSupportResult < defenderPostSupportResult)
+            else if (attackerPostSupportResult < defenderPostSupportResult &&
+                DefenderCanDamageAttacker(result))
             {
                 int pdCount = getPointDefenseCount(Attacker, SupportingAttackers.Keys.ToList());
-                int damageDiscount = getPointDefenseDamageDiscount(Attacker, defenderPreSupportResult - attackerPreSupportResult,
+                int damageDiscount = getPointDefenseDamageDiscount(Defender, defenderPreSupportResult - attackerPreSupportResult,
                     SupportingAttackers, pdCount, result);
                 int actualDamage = Math.Max(damage - damageDiscount, 0);
 
@@ -365,6 +364,19 @@ namespace TwilightCombatTracker
             }
 
             return false;
+        }
+
+        private bool DefenderCanDamageAttacker(StringBuilder result)
+        {
+            if (Attacker.Equipment.Effects.ContainsKey(Tag.Artillery) &&
+                Attacker.Unit.HasTag(Tag.LongRange) &&
+                !Defender.Equipment.Effects.ContainsKey(Tag.Artillery))
+            {
+                result.AppendLine("Defender cannot inflict damage on artillery at long range.");
+                return false;
+            }
+
+            return true;
         }
 
         /// <summary>

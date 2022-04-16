@@ -261,7 +261,7 @@ namespace TwilightCombatTracker
             return accumulator.ToString();
         }
 
-        public string EndOfRound()
+        public string EndOfRound(bool autoWithdraw)
         {
             currentEngagements.Clear();
             unitEngagementCount.Clear();
@@ -310,7 +310,7 @@ namespace TwilightCombatTracker
                     accumulator.Append($"{unit.Name} withdraws.");
                 }
 
-                if (unit.Health <= 50 && unit.IsActive() && !unit.Tags.Contains(Tag.Structure))
+                if (autoWithdraw && unit.Health <= 50 && unit.IsActive() && !unit.Tags.Contains(Tag.Structure))
                 {
                     unit.Tags.Add(Tag.Withdrawing);
                 }

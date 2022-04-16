@@ -118,7 +118,11 @@ namespace TwilightCombatTracker
         [Category("UnitPropertyTag")]
         PointDefenseLaser = 46,
         [Category("EquipmentPropertyTag")]
-        PointDefenseUseful = 47
+        PointDefenseUseful = 47,
+        [Category("EquipmentPropertyTage")]
+        Artillery = 48,
+        [Category("EnvironmentTag")]
+        LongRange = 49
     }
 
     public static class TagProperties {

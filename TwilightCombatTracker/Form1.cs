@@ -291,7 +291,7 @@ namespace TwilightCombatTracker
 
         private void EndRoundHandler(Object sender, EventArgs e)
         {
-            combatManager.EndOfRound();
+            combatManager.EndOfRound(chkAutoWithdraw.Checked);
             PopulateBluForList();
             PopulateOpforList();
             PopulateEngagementList();
