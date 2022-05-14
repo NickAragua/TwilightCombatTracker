@@ -188,6 +188,8 @@ namespace TwilightCombatTracker
                 int pdCount = getPointDefenseCount(Defender, SupportingDefenders.Keys.ToList());
                 int damageDiscount = getPointDefenseDamageDiscount(Attacker, attackerPreSupportResult - defenderPreSupportResult,
                     SupportingDefenders, pdCount, result);
+                damageDiscount += getNoDamageDamageDiscount(Attacker, attackerPostSupportResult - defenderPreSupportResult,
+                    SupportingDefenders, Defender.Unit, result);
                 int actualDamage = Math.Max(damage - damageDiscount, 0);
 
                 ProcessDamage(Attacker.Unit, Attacker.Equipment, Defender.Unit, actualDamage, result, random, attackerCrit);
@@ -199,6 +201,8 @@ namespace TwilightCombatTracker
                 int pdCount = getPointDefenseCount(Attacker, SupportingAttackers.Keys.ToList());
                 int damageDiscount = getPointDefenseDamageDiscount(Defender, defenderPreSupportResult - attackerPreSupportResult,
                     SupportingAttackers, pdCount, result);
+                damageDiscount += getNoDamageDamageDiscount(Defender, defenderPreSupportResult - attackerPreSupportResult,
+                    SupportingAttackers, Defender.Unit, result);
                 int actualDamage = Math.Max(damage - damageDiscount, 0);
 
                 ProcessDamage(Defender.Unit, Defender.Equipment, Attacker.Unit, actualDamage, result, random, attackerCrit);
@@ -251,38 +255,19 @@ namespace TwilightCombatTracker
 
             Unit effectiveVictim = victimInBunker ? victim.Bunker : victim;
 
-            if (!shooterWeapon.hasAnyApplicableModifiers(effectiveVictim) && 
-                shooterWeapon.Effects.ContainsKey(Tag.NoneOfTheAbove) &&
-                shooterWeapon.Effects[Tag.NoneOfTheAbove] == Equipment.NO_EFFECT)
-            {
-                result.AppendLine("Weapon completely ineffective against target; no damage");
-                return;
-            }
-
             if (victimInBunker)
             {
                 result.AppendLine($"{victim.Name} is sheltered in {effectiveVictim.Name};");
             }
 
-            if (shooter.Tags.Contains(Tag.Stunned))
-            {
-                result.AppendLine($"{shooter.Name} stunned; no damage inflicted");
-                return;
-            }
-            else if (shooterWeapon.Effects.ContainsKey(Tag.NoDamage))
-            {
-                result.AppendLine($"{shooter.Name} is unarmed; no damage inflicted");
-            }
-            else if (shooterWeapon.Effects.ContainsKey(Tag.Laser) && effectiveVictim.Tags.Contains(Tag.AblativePlating))
-            {
-                result.AppendLine($"Ablative plating on {effectiveVictim.Name} absorbs {damage}.");
-            }
-            else if (bunkerClearance)
+            // special case - someone's using bunker clearance weapon vs target
+            if (bunkerClearance)
             {
                 result.AppendLine($"Bunker-clearance weapon employed; target eliminated");
                 victim.Health = 0;
                 victim.Tags.Add(Tag.DestructionPending);
             }
+            // special case - someone's using a sniper weapon vs infantry
             else if (shooterWeapon.Effects.ContainsKey(Tag.SniperLogic) && 
                 (victim.HasTag(Tag.Armored) || !victim.HasTag(Tag.FootInfantry)))
             {
@@ -297,6 +282,7 @@ namespace TwilightCombatTracker
                     result.AppendLine("Sniper fire has no effect against non-infantry target");
                 }
             }
+            // normal case - do damage
             else
             {
                 effectiveVictim.Health -= damage;
@@ -433,6 +419,41 @@ namespace TwilightCombatTracker
             if (damageDiscount > 0)
             {
                 result.AppendLine($"{damageDiscount} damage negated by point defense!");
+            }
+
+            return damageDiscount;
+        }
+
+        /// <summary>
+        /// Given a primary unit, primary unit roll, supporting attack resolutions,
+        /// Give me how much damage we're losing here due to an attacker being unarmed
+        /// </summary>
+        private int getNoDamageDamageDiscount(UnitEquipmentTuple primaryUnit, int primaryUnitRollDiff,
+            Dictionary<UnitEquipmentTuple, int> supportingUnits, Unit defender, StringBuilder result)
+        {
+            int damageDiscount = 0;
+
+            string noDamageReason = primaryUnit.Equipment.getNoDamageReason(primaryUnit.Unit, defender);
+
+            if (primaryUnitRollDiff > 0 && !string.IsNullOrEmpty(noDamageReason))
+            {
+                damageDiscount = primaryUnitRollDiff;
+                result.AppendLine($"{primaryUnit} {noDamageReason}, subtracting {primaryUnitRollDiff} from damage");
+            }
+
+            foreach (UnitEquipmentTuple unit in supportingUnits.Keys)
+            {
+                noDamageReason = primaryUnit.Equipment.getNoDamageReason(unit.Unit, defender);
+
+                if (!string.IsNullOrEmpty(noDamageReason))
+                {
+                    damageDiscount += supportingUnits[unit];
+                }
+            }
+
+            if (damageDiscount > 0)
+            {
+                result.AppendLine($"{damageDiscount} total damage negated!");
             }
 
             return damageDiscount;

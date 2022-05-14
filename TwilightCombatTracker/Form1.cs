@@ -178,7 +178,7 @@ namespace TwilightCombatTracker
                 selectedEngagement = (Engagement)lstEngagements.SelectedItem;
                 btnRunEngagement.Enabled = selectedEngagement != null && !selectedEngagement.resolved && !selectedEngagement.IsSupportingEngagement;
                 txtCombatPreview.Text = selectedEngagement.DetailedBreakdown();
-                btnFlipEngagement.Enabled = !selectedEngagement.IsSupportingEngagement;
+                btnFlipEngagement.Enabled = !selectedEngagement.resolved;
             }
         }
 

@@ -339,5 +339,32 @@ namespace TwilightCombatTracker
 
             return Name.CompareTo(((Equipment) other).Name);
         }
+
+        public string getNoDamageReason(Unit shooter, Unit target)
+        {
+            if (Effects.ContainsKey(Tag.NoDamage))
+            {
+                return "unarmed";
+            }
+
+            if (shooter.HasTag(Tag.Stunned))
+            {
+                return "stunned";
+            }
+
+            if (target.HasTag(Tag.AblativePlating) && Effects.ContainsKey(Tag.Laser))
+            {
+                return "using laser vs ablative plating";
+            }
+
+            if (!hasAnyApplicableModifiers(target) &&
+                Effects.ContainsKey(Tag.NoneOfTheAbove) &&
+                Effects[Tag.NoneOfTheAbove] == Equipment.NO_EFFECT)
+            {
+                return "using completely ineffective weapon";
+            }
+
+            return String.Empty;
+        }
     }
 }
