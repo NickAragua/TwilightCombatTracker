@@ -122,7 +122,9 @@ namespace TwilightCombatTracker
         [Category("EquipmentPropertyTage")]
         Artillery = 48,
         [Category("EnvironmentTag")]
-        LongRange = 49
+        LongRange = 49,
+        [Category("UnitPropertyTag")]
+        Tall = 50
     }
 
     public static class TagProperties {

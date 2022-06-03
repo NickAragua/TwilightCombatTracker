@@ -143,6 +143,12 @@ namespace TwilightCombatTracker
             predatorRailgun.Effects.Add(Tag.Visceroid, -20);
             EquipmentDatabase.Add(predatorRailgun);
 
+            Equipment dualRailgun = new Equipment();
+            dualRailgun.Name = "Dual Railgun";
+            dualRailgun.Effects.Add(Tag.Vehicle, 20);
+            dualRailgun.Effects.Add(Tag.Visceroid, -20);
+            EquipmentDatabase.Add(dualRailgun);
+
             // Scorpion Equipment
             // gun is effective vs vehicles, but not armored ones
             Equipment scorpionTurret = new Equipment();
@@ -152,6 +158,13 @@ namespace TwilightCombatTracker
             scorpionTurret.Effects.Add(Tag.Visceroid, -20);
             scorpionTurret.Effects.Add(Tag.PointDefenseUseful, 0);
             EquipmentDatabase.Add(scorpionTurret);
+
+            Equipment scorpionBiprop = new Equipment();
+            scorpionBiprop.Name = "Biprop Cannon";
+            scorpionBiprop.Effects.Add(Tag.Vehicle, 15);
+            scorpionBiprop.Effects.Add(Tag.Visceroid, -20);
+            scorpionBiprop.Effects.Add(Tag.PointDefenseUseful, 0);
+            EquipmentDatabase.Add(scorpionBiprop);
 
             Equipment scorpionLaser = new Equipment();
             scorpionLaser.Name = "Scorpion Laser";
@@ -210,11 +223,41 @@ namespace TwilightCombatTracker
             orcaAAMissiles.Effects.Add(Tag.PointDefenseUseful, 0);
             EquipmentDatabase.Add(orcaAAMissiles);
 
+            Equipment orcaRailgun = new Equipment();
+            orcaRailgun.Name = "Orca Railgun";
+            EquipmentDatabase.Add(orcaRailgun);
+
             Equipment venomMG = new Equipment();
             venomMG.Name = "VenomMG";
             venomMG.Effects.Add(Tag.Visceroid, -20);
             venomMG.Effects.Add(Tag.Aircraft, 0);
             EquipmentDatabase.Add(venomMG);
+
+            Equipment firehawkAG = new Equipment();
+            firehawkAG.Name = "Air-To-Ground";
+            firehawkAG.Effects.Add(Tag.Vehicle, 30);
+            firehawkAG.Effects.Add(Tag.FootInfantry, 30);
+            firehawkAG.Effects.Add(Tag.Visceroid, 30);
+            firehawkAG.Effects.Add(Tag.Aircraft, NO_EFFECT);
+            EquipmentDatabase.Add(firehawkAG);
+
+            Equipment firehawkAA = new Equipment();
+            firehawkAA.Name = "Air-To-Air";
+            firehawkAA.Effects.Add(Tag.Vehicle, NO_EFFECT);
+            firehawkAA.Effects.Add(Tag.FootInfantry, NO_EFFECT);
+            firehawkAA.Effects.Add(Tag.Visceroid, NO_EFFECT);
+            firehawkAA.Effects.Add(Tag.Aircraft, 15);
+            firehawkAA.Effects.Add(Tag.LongRange, 15);
+            EquipmentDatabase.Add(firehawkAA);
+
+            Equipment barghestAA = new Equipment();
+            barghestAA.Name = "Plasma Cannons";
+            barghestAA.Effects.Add(Tag.Vehicle, 30);
+            barghestAA.Effects.Add(Tag.Aircraft, 30);
+            barghestAA.Effects.Add(Tag.Visceroid, 30);
+            barghestAA.Effects.Add(Tag.FootInfantry, 30);
+            barghestAA.Effects.Add(Tag.LongRange, NO_EFFECT);
+            EquipmentDatabase.Add(barghestAA);
 
             // Special case:
             Equipment unarmed = new Equipment();
