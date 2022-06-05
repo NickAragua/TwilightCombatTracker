@@ -41,6 +41,11 @@ namespace TwilightCombatTracker
             Defender = hold;
         }
 
+        public void ForceNonSupporting()
+        {
+            supportDivider = NO_SUPPORT;
+        }
+
         public override string ToString()
         {
             string resolvedString = resolved ? "(*)" : "";

@@ -332,5 +332,23 @@ namespace TwilightCombatTracker
         {
             txtAccumulator.Clear();
         }
+
+        private void btnDeleteEngagement_Click(object sender, EventArgs e)
+        {
+            if (lstEngagements.SelectedItem != null)
+            {
+                combatManager.DeleteEngagement((Engagement) lstEngagements.SelectedItem);
+                PopulateEngagementList();
+            }
+        }
+
+        private void btnForcePrimary_Click(object sender, EventArgs e)
+        {
+            if (selectedEngagement != null)
+            {
+                selectedEngagement.ForceNonSupporting();
+                txtCombatPreview.Text = selectedEngagement.DetailedBreakdown();
+            }
+        }
     }
 }

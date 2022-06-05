@@ -11,6 +11,8 @@ namespace TwilightCombatTracker
         private List<Unit> BluForUnits = new List<Unit>();
         private List<Unit> OpForUnits = new List<Unit>();
         public List<Engagement> currentEngagements = new List<Engagement>();
+
+        // the key is the hashcode of a Unit
         private Dictionary<int, int> unitEngagementCount = new Dictionary<int, int>();
         private Random random = new Random();
         public HashSet<Tag> globalBluTags = new HashSet<Tag>();
@@ -98,9 +100,12 @@ namespace TwilightCombatTracker
 
         public bool CanUnitAttack(UnitEquipmentTuple unit)
         {
+            bool unitEngaged = unitEngagementCount.ContainsKey(unit.GetHashCode()) &&
+                unitEngagementCount[unit.GetHashCode()] > 0;
+
             // a unit cannot attack if it is already engaged or
             // if it's destroyed/withdrawn/stunned/withdrawing
-            return !unitEngagementCount.ContainsKey(unit.GetHashCode()) && unit.Unit.IsActive() && 
+            return !unitEngaged && unit.Unit.IsActive() && 
                 !unit.Unit.Tags.Contains(Tag.Stunned) && !unit.Unit.Tags.Contains(Tag.Withdrawing);
         }
 
@@ -342,6 +347,21 @@ namespace TwilightCombatTracker
             else
             {
                 OpForUnits.Remove(unit);
+            }
+        }
+
+        public void DeleteEngagement(Engagement eng)
+        {
+            currentEngagements.Remove(eng);
+            
+            if (unitEngagementCount.ContainsKey(eng.Attacker.GetHashCode()))
+            {
+                unitEngagementCount[eng.Attacker.GetHashCode()]--;
+            }
+
+            if (unitEngagementCount.ContainsKey(eng.Defender.GetHashCode()))
+            {
+                unitEngagementCount[eng.Defender.GetHashCode()]--;
             }
         }
 

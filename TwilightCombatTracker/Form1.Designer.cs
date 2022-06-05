@@ -57,6 +57,8 @@ namespace TwilightCombatTracker
             this.btnDefectBlue = new System.Windows.Forms.Button();
             this.chkClearOnLoad = new System.Windows.Forms.CheckBox();
             this.chkAutoWithdraw = new System.Windows.Forms.CheckBox();
+            this.btnDeleteEngagement = new System.Windows.Forms.Button();
+            this.btnForcePrimary = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // lstBlueFor
@@ -315,6 +317,26 @@ namespace TwilightCombatTracker
             this.chkAutoWithdraw.Text = "Auto Withdraw at 50%?";
             this.chkAutoWithdraw.UseVisualStyleBackColor = true;
             // 
+            // btnDeleteEngagement
+            // 
+            this.btnDeleteEngagement.Location = new System.Drawing.Point(998, 296);
+            this.btnDeleteEngagement.Name = "btnDeleteEngagement";
+            this.btnDeleteEngagement.Size = new System.Drawing.Size(75, 23);
+            this.btnDeleteEngagement.TabIndex = 28;
+            this.btnDeleteEngagement.Text = "Delete";
+            this.btnDeleteEngagement.UseVisualStyleBackColor = true;
+            this.btnDeleteEngagement.Click += new System.EventHandler(this.btnDeleteEngagement_Click);
+            // 
+            // btnForcePrimary
+            // 
+            this.btnForcePrimary.Location = new System.Drawing.Point(543, 120);
+            this.btnForcePrimary.Name = "btnForcePrimary";
+            this.btnForcePrimary.Size = new System.Drawing.Size(83, 23);
+            this.btnForcePrimary.TabIndex = 29;
+            this.btnForcePrimary.Text = "Force Primary";
+            this.btnForcePrimary.UseVisualStyleBackColor = true;
+            this.btnForcePrimary.Click += new System.EventHandler(this.btnForcePrimary_Click);
+            // 
             // frmCombatTracker
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -322,6 +344,8 @@ namespace TwilightCombatTracker
             this.AutoSize = true;
             this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.ClientSize = new System.Drawing.Size(1195, 410);
+            this.Controls.Add(this.btnForcePrimary);
+            this.Controls.Add(this.btnDeleteEngagement);
             this.Controls.Add(this.chkAutoWithdraw);
             this.Controls.Add(this.chkClearOnLoad);
             this.Controls.Add(this.btnDefectBlue);
@@ -385,6 +409,8 @@ namespace TwilightCombatTracker
         private System.Windows.Forms.Button btnDefectBlue;
         private System.Windows.Forms.CheckBox chkClearOnLoad;
         private System.Windows.Forms.CheckBox chkAutoWithdraw;
+        private System.Windows.Forms.Button btnDeleteEngagement;
+        private System.Windows.Forms.Button btnForcePrimary;
     }
 }
 
