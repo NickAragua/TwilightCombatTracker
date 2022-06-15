@@ -124,7 +124,9 @@ namespace TwilightCombatTracker
         [Category("EnvironmentTag")]
         LongRange = 49,
         [Category("UnitPropertyTag")]
-        Tall = 50
+        Tall = 50,
+        [Category("UnitPropertyTag")]
+        MechShield = 51
     }
 
     public static class TagProperties {

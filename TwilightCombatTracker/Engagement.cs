@@ -238,7 +238,8 @@ namespace TwilightCombatTracker
             shooter.GunneryXP++;
             victim.GunneryXP += 2;
 
-            if (ProcessHologram(victim, result, random))
+            if (ProcessDefense(Tag.Hologram, victim, result, random) ||
+                ProcessDefense(Tag.MechShield, victim, result, random))
             {
                 return;
             }
@@ -310,26 +311,26 @@ namespace TwilightCombatTracker
         }
 
         /// <summary>
-        /// Do a hologram check for the given unit; append the results to the given stringbuilder.
+        /// Do a defense check for the given unit; append the results to the given stringbuilder.
         /// Needs an RNG as well.
         /// </summary>
-        private bool ProcessHologram(Unit victim, StringBuilder result, Random random)
+        private bool ProcessDefense(Tag tag, Unit victim, StringBuilder result, Random random)
         {
-            if (victim.Tags.Contains(Tag.Hologram) ||
-                victim.Bunker?.Tags?.Contains(Tag.Hologram) == true)
+            if (victim.Tags.Contains(tag) ||
+                victim.Bunker?.Tags?.Contains(tag) == true)
             {
                 int holoRoll = random.Next(1, 101);
-                result.AppendLine($"Hologram Roll {holoRoll}");
+                result.AppendLine($"{tag} roll: {holoRoll}");
                 if (holoRoll <= 50)
                 {
-                    result.AppendLine("Target is using hologram; hologram hit and disappears; damage negated");
+                    result.AppendLine($"Target is using {tag}; hologram hit and disappears; damage negated");
                     victim.Tags.Remove(Tag.Hologram);
                     victim.Bunker?.Tags?.Remove(Tag.Hologram);
                     return true;
                 } 
                 else
                 {
-                    result.AppendLine("Target is using hologram; actual target hit.");
+                    result.AppendLine($"Target is using {tag}; actual target hit.");
                 }
             }
 
