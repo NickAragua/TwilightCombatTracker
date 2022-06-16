@@ -193,6 +193,12 @@ namespace TwilightCombatTracker
             turretRailgun.Effects.Add(Tag.Visceroid, -20);
             EquipmentDatabase.Add(turretRailgun);
 
+            Equipment harvesterRailgun = new Equipment();
+            harvesterRailgun.Name = "Harvester Railgun";
+            harvesterRailgun.Effects.Add(Tag.Vehicle, 15);
+            harvesterRailgun.Effects.Add(Tag.Visceroid, -20);
+            EquipmentDatabase.Add(harvesterRailgun);
+
             Equipment turretAA = new Equipment();
             turretAA.Name = "Turret AA";
             turretAA.Effects.Add(Tag.NoneOfTheAbove, NO_EFFECT);
@@ -225,6 +231,7 @@ namespace TwilightCombatTracker
 
             Equipment orcaRailgun = new Equipment();
             orcaRailgun.Name = "Orca Railgun";
+            orcaRailgun.Effects.Add(Tag.Visceroid, -20);
             EquipmentDatabase.Add(orcaRailgun);
 
             Equipment venomMG = new Equipment();
@@ -275,6 +282,7 @@ namespace TwilightCombatTracker
             basicArtillery.Effects.Add(Tag.Artillery, 0);
             basicArtillery.Effects.Add(Tag.FootInfantry, +25);
             basicArtillery.Effects.Add(Tag.Structure, +25);
+            basicArtillery.Effects.Add(Tag.Visceroid, +25);
             basicArtillery.Effects.Add(Tag.PointDefenseUseful, 0);
             EquipmentDatabase.Add(basicArtillery);
         }
@@ -355,6 +363,18 @@ namespace TwilightCombatTracker
             }
 
             return false;
+        }
+
+        public string getReadout()
+        {
+            StringBuilder sb = new StringBuilder();
+
+            foreach(var effect in Effects.Keys)
+            {
+                sb.AppendLine($"{effect} : {Effects[effect]}");
+            }
+
+            return sb.ToString();
         }
 
         public override string ToString()

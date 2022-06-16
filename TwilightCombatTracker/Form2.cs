@@ -227,5 +227,13 @@ namespace TwilightCombatTracker
         {
             btnRemoveSpec.Enabled = lstSpecs.SelectedItems.Count > 0;
         }
+
+        private void lstUnitEquipment_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (lstUnitEquipment.SelectedItem != null)
+            {
+                txtWeaponReadout.Text = ((Equipment)lstUnitEquipment.SelectedItem).getReadout();
+            }
+        }
     }
 }

@@ -50,6 +50,7 @@ namespace TwilightCombatTracker
             this.btnAddSpec = new System.Windows.Forms.Button();
             this.lstSpecs = new System.Windows.Forms.ListBox();
             this.btnRemoveSpec = new System.Windows.Forms.Button();
+            this.txtWeaponReadout = new System.Windows.Forms.TextBox();
             ((System.ComponentModel.ISupportInitialize)(this.numSpeed)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numHealth)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.spnSpecMod)).BeginInit();
@@ -88,6 +89,7 @@ namespace TwilightCombatTracker
             this.lstUnitEquipment.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended;
             this.lstUnitEquipment.Size = new System.Drawing.Size(172, 121);
             this.lstUnitEquipment.TabIndex = 3;
+            this.lstUnitEquipment.SelectedIndexChanged += new System.EventHandler(this.lstUnitEquipment_SelectedIndexChanged);
             // 
             // numSpeed
             // 
@@ -252,11 +254,21 @@ namespace TwilightCombatTracker
             this.btnRemoveSpec.Text = "Remove Spec";
             this.btnRemoveSpec.UseVisualStyleBackColor = true;
             // 
+            // txtWeaponReadout
+            // 
+            this.txtWeaponReadout.Location = new System.Drawing.Point(190, 294);
+            this.txtWeaponReadout.Multiline = true;
+            this.txtWeaponReadout.Name = "txtWeaponReadout";
+            this.txtWeaponReadout.ReadOnly = true;
+            this.txtWeaponReadout.Size = new System.Drawing.Size(174, 156);
+            this.txtWeaponReadout.TabIndex = 22;
+            // 
             // frmAddUnit
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(371, 455);
+            this.Controls.Add(this.txtWeaponReadout);
             this.Controls.Add(this.btnRemoveSpec);
             this.Controls.Add(this.lstSpecs);
             this.Controls.Add(this.btnAddSpec);
@@ -311,5 +323,6 @@ namespace TwilightCombatTracker
         private System.Windows.Forms.Button btnAddSpec;
         private System.Windows.Forms.ListBox lstSpecs;
         private System.Windows.Forms.Button btnRemoveSpec;
+        private System.Windows.Forms.TextBox txtWeaponReadout;
     }
 }
