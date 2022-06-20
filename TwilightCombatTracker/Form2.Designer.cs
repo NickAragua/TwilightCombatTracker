@@ -224,6 +224,11 @@ namespace TwilightCombatTracker
             // spnSpecMod
             // 
             this.spnSpecMod.Location = new System.Drawing.Point(190, 139);
+            this.spnSpecMod.Minimum = new decimal(new int[] {
+            100,
+            0,
+            0,
+            -2147483648});
             this.spnSpecMod.Name = "spnSpecMod";
             this.spnSpecMod.Size = new System.Drawing.Size(56, 20);
             this.spnSpecMod.TabIndex = 18;

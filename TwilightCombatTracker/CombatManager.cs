@@ -296,6 +296,16 @@ namespace TwilightCombatTracker
                     unit.Tags.Remove(Tag.EngagedThisTurn);
                 }
 
+                // resolve withdraws before removing stunned tag - stunned units cannot withdraw
+                if (unit.Tags.Contains(Tag.Withdrawing) &&
+                    !unit.Tags.Contains(Tag.EngagedThisTurn) &&
+                    !unit.Tags.Contains(Tag.Stunned))
+                {
+                    unit.Tags.Remove(Tag.Withdrawing);
+                    unit.Tags.Add(Tag.Withdrawn);
+                    accumulator.Append($"{unit.Name} withdraws.");
+                }
+
                 if (unit.Tags.Contains(Tag.Stunned))
                 {
                     unit.Tags.Remove(Tag.Stunned);
@@ -307,14 +317,7 @@ namespace TwilightCombatTracker
                     unit.Tags.Remove(Tag.StunPending);
                     unit.Tags.Add(Tag.Stunned);
                 }
-
-                if (unit.Tags.Contains(Tag.Withdrawing) && !unit.Tags.Contains(Tag.EngagedThisTurn))
-                {
-                    unit.Tags.Remove(Tag.Withdrawing);
-                    unit.Tags.Add(Tag.Withdrawn);
-                    accumulator.Append($"{unit.Name} withdraws.");
-                }
-
+                
                 if (autoWithdraw && unit.Health <= 50 && unit.IsActive() && !unit.Tags.Contains(Tag.Structure))
                 {
                     unit.Tags.Add(Tag.Withdrawing);
@@ -353,6 +356,8 @@ namespace TwilightCombatTracker
         public void DeleteEngagement(Engagement eng)
         {
             currentEngagements.Remove(eng);
+            eng.Attacker.Unit.Tags.Remove(Tag.EngagedThisTurn);
+            eng.Defender.Unit.Tags.Remove(Tag.EngagedThisTurn);
             
             if (unitEngagementCount.ContainsKey(eng.Attacker.GetHashCode()))
             {

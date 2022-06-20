@@ -323,9 +323,9 @@ namespace TwilightCombatTracker
                 result.AppendLine($"{tag} roll: {holoRoll}");
                 if (holoRoll <= 50)
                 {
-                    result.AppendLine($"Target is using {tag}; hologram hit and disappears; damage negated");
-                    victim.Tags.Remove(Tag.Hologram);
-                    victim.Bunker?.Tags?.Remove(Tag.Hologram);
+                    result.AppendLine($"Target is using {tag}; defensive measure hit and disappears; damage negated");
+                    victim.Tags.Remove(tag);
+                    victim.Bunker?.Tags?.Remove(tag);
                     return true;
                 } 
                 else
