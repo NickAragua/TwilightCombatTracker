@@ -74,12 +74,12 @@ namespace TwilightCombatTracker
             String defenderCrit = Defender.Unit.Tags.Contains(Tag.InitCrit) ? "Defender has initiative crit.\r\n" : "";
             String defenderCritFail = Defender.Unit.Tags.Contains(Tag.InitCrit) ? "Defender has initiative crit fail.\r\n" : "";
 
-            String attacker = Attacker.Unit.getApplicableModifierString(Defender.Unit, Attacker.Equipment, supportDivider);
+            String attacker = Attacker.Unit.getApplicableModifierString(Defender.Unit, Attacker.Equipment, supportDivider, Defender.Equipment);
 
             // if it is a supporting engagement, we do not display the defenders mods/etc
             String defender = IsSupportingEngagement ?
                 "" :
-                $"{Defender.Unit.getApplicableModifierString(Attacker.Unit, Defender.Equipment, 1)}";
+                $"{Defender.Unit.getApplicableModifierString(Attacker.Unit, Defender.Equipment, 1, Attacker.Equipment)}";
 
             String vsString = IsSupportingEngagement ? "" : " vs\r\n1d100";
 
@@ -95,11 +95,6 @@ namespace TwilightCombatTracker
                 defenderSupportAccumulator.Append($" + {SupportingDefenders[defendSupporter]} from {defendSupporter.Unit.Name} ");
             }
 
-            /*int actualAttackerMod = Attacker.Unit.getApplicableModifier(Defender.Unit, Attacker.Equipment);
-            int actualDefenderMod = Defender.Unit.getApplicableModifier(Attacker.Unit, Defender.Equipment);
-            string supportText = IsSupportingEngagement ? $" / {supportDivider} (support)" : "";
-
-            //\r\ndebug: actual mods {actualAttackerMod}{supportText} vs {actualDefenderMod}*/
             return $"{attackerCrit}{attackerCritFail}{defenderCrit}{defenderCritFail}{Attacker.Unit} vs {Defender.Unit}\r\n1d100{attacker}{attackerSupportAccumulator}{vsString}{defender}{defenderSupportAccumulator}";
         }
 
@@ -150,7 +145,7 @@ namespace TwilightCombatTracker
             resolved = true;
 
             int attackerRoll = random.Next(1, 100);
-            int attackerPreSupportResult = attackerRoll + Attacker.Unit.getApplicableModifier(Defender.Unit, Attacker.Equipment);
+            int attackerPreSupportResult = attackerRoll + Attacker.Unit.getApplicableModifier(Defender.Unit, Attacker.Equipment, Defender.Equipment);
             int attackerPostSupportResult = attackerPreSupportResult;
             foreach (int supportingAttack in SupportingAttackers.Values)
             {
@@ -158,7 +153,7 @@ namespace TwilightCombatTracker
             }
 
             int defenderRoll = random.Next(1, 100);
-            int defenderPreSupportResult = defenderRoll + Defender.Unit.getApplicableModifier(Attacker.Unit, Defender.Equipment);
+            int defenderPreSupportResult = defenderRoll + Defender.Unit.getApplicableModifier(Attacker.Unit, Defender.Equipment, Attacker.Equipment);
             int defenderPostSupportResult = defenderPreSupportResult;
 
             foreach (int supportingAttack in SupportingDefenders.Values)

@@ -16,8 +16,161 @@ namespace TwilightCombatTracker
         {
             EquipmentDatabase = new List<Equipment>();
 
-            // infantry equipment
+            // Nod Infantry Equipment
             Equipment nodInfantrySmallArms = new Equipment();
+            nodInfantrySmallArms.Name = "Nod Rifle";
+            nodInfantrySmallArms.Effects.Add(Tag.Vehicle, -5);
+            nodInfantrySmallArms.Effects.Add(Tag.Armored, -5);
+            nodInfantrySmallArms.Effects.Add(Tag.Visceroid, -20);
+            EquipmentDatabase.Add(nodInfantrySmallArms);
+
+            Equipment nodInfantryLaser = new Equipment();
+            nodInfantryLaser.Name = "Nod Laser Rifle";
+            nodInfantryLaser.Effects.Add(Tag.General, +5);
+            nodInfantryLaser.Effects.Add(Tag.Laser, +0);
+            EquipmentDatabase.Add(nodInfantryLaser);
+
+            Equipment nodInfantryRockets = new Equipment();
+            nodInfantryRockets.Name = "Nod Rockets";
+            nodInfantryRockets.Effects.Add(Tag.FootInfantry, -5);
+            nodInfantryRockets.Effects.Add(Tag.Aircraft, +5);
+            nodInfantryRockets.Effects.Add(Tag.Vehicle, +5);
+            nodInfantryRockets.Effects.Add(Tag.Armored, -5);
+            nodInfantryRockets.Effects.Add(Tag.PointDefenseUseful, 0);
+            EquipmentDatabase.Add(nodInfantryRockets);
+
+            Equipment nodInfantryTibRockets = new Equipment();
+            nodInfantryTibRockets.Name = "Nod T-Rockets";
+            nodInfantryTibRockets.Effects.Add(Tag.Aircraft, +10);
+            nodInfantryTibRockets.Effects.Add(Tag.Vehicle, +10);
+            nodInfantryTibRockets.Effects.Add(Tag.PointDefenseUseful, 0);
+            EquipmentDatabase.Add(nodInfantryTibRockets);
+
+            Equipment nodInfantryFlamer = new Equipment();
+            nodInfantryFlamer.Name = "Nod Infantry Flamer";
+            nodInfantryFlamer.Effects.Add(Tag.FootInfantry, +15);
+            nodInfantryFlamer.Effects.Add(Tag.Armored, -5);
+            nodInfantryFlamer.Effects.Add(Tag.FastSpeed, -5);
+            nodInfantryFlamer.Effects.Add(Tag.BunkerClearance, 0);
+            EquipmentDatabase.Add(nodInfantryFlamer);
+
+            Equipment gdiRifles = new Equipment();
+            gdiRifles.Name = "GDI Rifles";
+            gdiRifles.Effects.Add(Tag.Armored, -5);
+            gdiRifles.Effects.Add(Tag.Visceroid, -20);
+            EquipmentDatabase.Add(gdiRifles);
+
+            Equipment nodHandLaser = new Equipment();
+            nodHandLaser.Name = "Nod Laser Pistol";
+            nodHandLaser.Effects.Add(Tag.Laser, 0);
+            EquipmentDatabase.Add(nodHandLaser);
+
+            // APC/Heavy Infantry Equipment
+            Equipment apcMinigun = new Equipment();
+            apcMinigun.Name = "APC Minigun";
+            apcMinigun.Effects.Add(Tag.Armored, -5);
+            apcMinigun.Effects.Add(Tag.FootInfantry, 10);
+            apcMinigun.Effects.Add(Tag.Visceroid, -20);
+            apcMinigun.Effects.Add(Tag.Aircraft, -5);
+            EquipmentDatabase.Add(apcMinigun);
+
+            Equipment apcRocket = new Equipment();
+            apcRocket.Name = "APC Rocket";
+            apcRocket.Effects.Add(Tag.FastSpeed, 10);
+            apcRocket.Effects.Add(Tag.Aircraft, 10);
+            apcRocket.Effects.Add(Tag.FootInfantry, -5);
+            apcRocket.Effects.Add(Tag.PointDefenseUseful, 0);
+            EquipmentDatabase.Add(apcRocket);
+
+            Equipment apcGrenade = new Equipment();
+            apcGrenade.Name = "APC Grenade";
+            apcGrenade.Effects.Add(Tag.FastSpeed, -5);
+            apcGrenade.Effects.Add(Tag.Armored, -5);
+            apcGrenade.Effects.Add(Tag.FootInfantry, 15);
+            apcGrenade.Effects.Add(Tag.BunkerClearance, 0);
+            EquipmentDatabase.Add(apcGrenade);
+
+            Equipment apcLaser = new Equipment();
+            apcLaser.Name = "APC Laser";
+            apcLaser.Effects.Add(Tag.Laser, 0);
+            apcLaser.Effects.Add(Tag.FootInfantry, 15);
+            EquipmentDatabase.Add(apcLaser);
+
+            Equipment apcHeavyLaser = new Equipment();
+            apcHeavyLaser.Name = "APC Heavy Laser";
+            apcHeavyLaser.Effects.Add(Tag.Laser, 0);
+            apcHeavyLaser.Effects.Add(Tag.Vehicle, 15);
+            EquipmentDatabase.Add(apcHeavyLaser);
+
+            Equipment nodBuggyMG = new Equipment();
+            nodBuggyMG.Name = "Buggy MG";
+            nodBuggyMG.Effects.Add(Tag.Vehicle, -5);
+            nodBuggyMG.Effects.Add(Tag.Armored, -5);
+            nodBuggyMG.Effects.Add(Tag.FootInfantry, 0);
+            nodBuggyMG.Effects.Add(Tag.Visceroid, -20);
+            EquipmentDatabase.Add(nodBuggyMG);
+
+            Equipment nodBuggyLaser = new Equipment();
+            nodBuggyLaser.Name = "Buggy Laser";
+            nodBuggyLaser.Effects.Add(Tag.General, +5);
+            nodBuggyLaser.Effects.Add(Tag.Aircraft, +5);
+            nodBuggyLaser.Effects.Add(Tag.Laser, +0);
+            EquipmentDatabase.Add(nodBuggyLaser);
+
+            // Scorpion Tank equipment
+            Equipment scorpionTurret = new Equipment();
+            scorpionTurret.Name = "105mm Cannon";
+            scorpionTurret.Effects.Add(Tag.Vehicle, 15);
+            scorpionTurret.Effects.Add(Tag.Armored, -15);
+            scorpionTurret.Effects.Add(Tag.Visceroid, -20);
+            scorpionTurret.Effects.Add(Tag.PointDefenseUseful, 0);
+            EquipmentDatabase.Add(scorpionTurret);
+
+            Equipment scorpionBiprop = new Equipment();
+            scorpionBiprop.Name = "Biprop Cannon";
+            scorpionBiprop.Effects.Add(Tag.Vehicle, 15);
+            scorpionBiprop.Effects.Add(Tag.Visceroid, -20);
+            scorpionBiprop.Effects.Add(Tag.PointDefenseUseful, 0);
+            EquipmentDatabase.Add(scorpionBiprop);
+
+            Equipment scorpionLaser = new Equipment();
+            scorpionLaser.Name = "Laser Cannon";
+            scorpionLaser.Effects.Add(Tag.Vehicle, 20);
+            scorpionLaser.Effects.Add(Tag.Laser, 0);
+            EquipmentDatabase.Add(scorpionLaser);
+
+            Equipment scorpionPlasma = new Equipment();
+            scorpionPlasma.Name = "Plasma Cannon";
+            scorpionPlasma.Effects.Add(Tag.Vehicle, 25);
+            EquipmentDatabase.Add(scorpionPlasma);
+
+            // Pitbull Equipment
+            Equipment pitbullMissile = new Equipment();
+            pitbullMissile.Name = "Missile Launcher";
+            pitbullMissile.Effects.Add(Tag.Aircraft, 10);
+            pitbullMissile.Effects.Add(Tag.FastSpeed, 10);
+            pitbullMissile.Effects.Add(Tag.FootInfantry, -10);
+            pitbullMissile.Effects.Add(Tag.PointDefenseUseful, 0);
+            EquipmentDatabase.Add(pitbullMissile);
+
+            Equipment pitbullMortar = new Equipment();
+            pitbullMortar.Name = "Mortar";
+            pitbullMortar.Effects.Add(Tag.NoneOfTheAbove, -10);
+            pitbullMortar.Effects.Add(Tag.Structure, 10);
+            pitbullMortar.Effects.Add(Tag.FootInfantry, 10);
+            pitbullMortar.Effects.Add(Tag.PointDefenseUseful, 0);
+            EquipmentDatabase.Add(pitbullMortar);
+
+            // Predator Equipment
+            Equipment predatorRailgun = new Equipment();
+            predatorRailgun.Name = "Railgun";
+            predatorRailgun.Effects.Add(Tag.Vehicle, 20);
+            predatorRailgun.Effects.Add(Tag.Visceroid, -20);
+            EquipmentDatabase.Add(predatorRailgun);
+
+
+            // infantry equipment
+            /*Equipment nodInfantrySmallArms = new Equipment();
             nodInfantrySmallArms.Name = "Small Arms";
             nodInfantrySmallArms.Effects.Add(Tag.NoneOfTheAbove, -10);
             nodInfantrySmallArms.Effects.Add(Tag.FootInfantry, 0);
@@ -48,6 +201,14 @@ namespace TwilightCombatTracker
             nodInfantryRockets.Effects.Add(Tag.Aircraft, 0);
             nodInfantryRockets.Effects.Add(Tag.PointDefenseUseful, 0);
             EquipmentDatabase.Add(nodInfantryRockets);
+
+            Equipment nodTiberiumRockets = new Equipment();
+            nodTiberiumRockets.Name = "Nod Rockets";
+            nodTiberiumRockets.Effects.Add(Tag.FootInfantry, -5);
+            nodTiberiumRockets.Effects.Add(Tag.Aircraft, 5);
+            nodTiberiumRockets.Effects.Add(Tag.Vehicle, 10);
+            nodTiberiumRockets.Effects.Add(Tag.PointDefenseUseful, 0);
+            EquipmentDatabase.Add(nodTiberiumRockets);
 
             Equipment nodInfernoRockets = new Equipment();
             nodInfernoRockets.Name = "Inferno Rockets";
@@ -89,6 +250,12 @@ namespace TwilightCombatTracker
             nodHandLaser.Name = "Laser Pistol";
             nodHandLaser.Effects.Add(Tag.Laser, 0);
             EquipmentDatabase.Add(nodHandLaser);
+
+            Equipment infantryLaser = new Equipment();
+            infantryLaser.Name = "Laser Rifle";
+            infantryLaser.Effects.Add(Tag.Laser, 0);
+            infantryLaser.Effects.Add(Tag.NoneOfTheAbove, +5);
+            EquipmentDatabase.Add(infantryLaser);
 
             Equipment sniperRifle = new Equipment();
             sniperRifle.Name = "Sniper Rifle";
@@ -284,7 +451,7 @@ namespace TwilightCombatTracker
             basicArtillery.Effects.Add(Tag.Structure, +25);
             basicArtillery.Effects.Add(Tag.Visceroid, +25);
             basicArtillery.Effects.Add(Tag.PointDefenseUseful, 0);
-            EquipmentDatabase.Add(basicArtillery);
+            EquipmentDatabase.Add(basicArtillery);*/
         }
 
 
@@ -312,6 +479,11 @@ namespace TwilightCombatTracker
             if (!modFound && Effects.ContainsKey(Tag.NoneOfTheAbove) && Effects[Tag.NoneOfTheAbove] != NO_EFFECT)
             {
                 mod += Effects[Tag.NoneOfTheAbove];
+            }
+
+            if (Effects.ContainsKey(Tag.General))
+            {
+                mod += Effects[Tag.General];
             }
 
             return mod;
@@ -343,6 +515,11 @@ namespace TwilightCombatTracker
                     Effects[Tag.NoneOfTheAbove], 
                     Name,
                     String.IsNullOrEmpty(NegativeEffectName) ? "" : $" vs {NegativeEffectName}");
+            }
+
+            if (Effects.ContainsKey(Tag.General))
+            {
+                sb.AppendFormat("{0}{1} (general)", Effects[Tag.General] >= 0 ? "+" : "", Effects[Tag.General]);
             }
 
             return sb.ToString();

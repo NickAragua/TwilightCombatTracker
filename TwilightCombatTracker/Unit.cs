@@ -64,7 +64,7 @@ namespace TwilightCombatTracker
             Specializations = new List<Specialization>();
         }
 
-        public String getApplicableModifierString(Unit other, Equipment specificWeapon, int supportDivider)
+        public String getApplicableModifierString(Unit other, Equipment specificWeapon, int supportDivider, Equipment otherSpecificWeapon = null)
         {
             StringBuilder sb = new StringBuilder();
 
@@ -90,7 +90,8 @@ namespace TwilightCombatTracker
 
                 foreach (Tag criterion in spec.Tags)
                 {
-                    if (!other.Tags.Contains(criterion) && !other.ExternalTags.Contains(criterion))
+                    if (!other.Tags.Contains(criterion) && !other.ExternalTags.Contains(criterion) &&
+                        (otherSpecificWeapon == null || !otherSpecificWeapon.Effects.ContainsKey(criterion)))
                     {
                         match = false;
                         break;
@@ -111,7 +112,7 @@ namespace TwilightCombatTracker
             return sb.ToString();
         }
 
-        public int getApplicableModifier(Unit other, Equipment specificWeapon)
+        public int getApplicableModifier(Unit other, Equipment specificWeapon, Equipment otherSpecificWeapon = null)
         {
             int mod = 0;
 
@@ -136,7 +137,8 @@ namespace TwilightCombatTracker
 
                 foreach (Tag criterion in spec.Tags)
                 {
-                    if (!other.Tags.Contains(criterion))
+                    if (!other.Tags.Contains(criterion) && !other.ExternalTags.Contains(criterion) &&
+                        (otherSpecificWeapon == null || !otherSpecificWeapon.Effects.ContainsKey(criterion)))
                     {
                         match = false;
                         break;
