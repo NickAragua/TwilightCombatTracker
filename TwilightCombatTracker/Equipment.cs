@@ -168,6 +168,68 @@ namespace TwilightCombatTracker
             predatorRailgun.Effects.Add(Tag.Visceroid, -20);
             EquipmentDatabase.Add(predatorRailgun);
 
+            // aircraft Equipment:
+            Equipment orcaRockets = new Equipment();
+            orcaRockets.Name = "Orca AtG";
+            orcaRockets.Effects.Add(Tag.Vehicle, +15);
+            orcaRockets.Effects.Add(Tag.Structure, +15);
+            orcaRockets.Effects.Add(Tag.FootInfantry, -15);
+            orcaRockets.Effects.Add(Tag.PointDefenseUseful, 0);
+            EquipmentDatabase.Add(orcaRockets);
+
+            Equipment orcaAAMissiles = new Equipment();
+            orcaAAMissiles.Name = "Orca AtA";
+            orcaAAMissiles.Effects.Add(Tag.NoneOfTheAbove, NO_EFFECT);
+            orcaAAMissiles.Effects.Add(Tag.Aircraft, 15);
+            orcaAAMissiles.Effects.Add(Tag.PointDefenseUseful, 0);
+            EquipmentDatabase.Add(orcaAAMissiles);
+
+            Equipment orcaRailgun = new Equipment();
+            orcaRailgun.Name = "Orca Railgun";
+            orcaRailgun.Effects.Add(Tag.Visceroid, -20);
+            orcaRailgun.Effects.Add(Tag.Aircraft, 0);
+            EquipmentDatabase.Add(orcaRailgun);
+
+            Equipment venomMG = new Equipment();
+            venomMG.Name = "VenomMG";
+            venomMG.Effects.Add(Tag.Visceroid, -20);
+            venomMG.Effects.Add(Tag.Vehicle, -5);
+            venomMG.Effects.Add(Tag.Armored, -5);
+            venomMG.Effects.Add(Tag.Aircraft, 0);
+            EquipmentDatabase.Add(venomMG);
+
+            Equipment venomLaser = new Equipment();
+            venomLaser.Name = "Venom Laser";
+            venomLaser.Effects.Add(Tag.General, +5);
+            venomLaser.Effects.Add(Tag.Aircraft, 0);
+            venomLaser.Effects.Add(Tag.Laser, 0);
+            EquipmentDatabase.Add(venomLaser);
+
+            // special equipment
+            Equipment unarmed = new Equipment();
+            unarmed.Name = "Unarmed";
+            unarmed.Effects.Add(Tag.NoDamage, 0);
+            EquipmentDatabase.Add(unarmed);
+
+            Equipment visceroidSpray = new Equipment();
+            visceroidSpray.Name = "Visceroid Spray";
+            visceroidSpray.Effects.Add(Tag.FootInfantry, +20);
+            EquipmentDatabase.Add(visceroidSpray);
+
+            Equipment sniperRifle = new Equipment();
+            sniperRifle.Name = "Sniper Rifle";
+            sniperRifle.Effects.Add(Tag.SniperLogic, 0); //insta-kill infantry, no damage vs anything else except on crit
+            EquipmentDatabase.Add(sniperRifle);
+
+            Equipment basicArtillery = new Equipment();
+            basicArtillery.Name = "Artillery";
+            basicArtillery.Effects.Add(Tag.Artillery, 0);
+            basicArtillery.Effects.Add(Tag.FootInfantry, +25);
+            basicArtillery.Effects.Add(Tag.Structure, +25);
+            basicArtillery.Effects.Add(Tag.Visceroid, +25);
+            basicArtillery.Effects.Add(Tag.PointDefenseUseful, 0);
+            EquipmentDatabase.Add(basicArtillery);
+
 
             // infantry equipment
             /*Equipment nodInfantrySmallArms = new Equipment();

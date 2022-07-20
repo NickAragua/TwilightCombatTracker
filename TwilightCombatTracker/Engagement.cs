@@ -444,7 +444,7 @@ namespace TwilightCombatTracker
 
             foreach (UnitEquipmentTuple unit in supportingUnits.Keys)
             {
-                noDamageReason = primaryUnit.Equipment.getNoDamageReason(unit.Unit, defender);
+                noDamageReason = unit.Equipment.getNoDamageReason(unit.Unit, defender);
 
                 if (!string.IsNullOrEmpty(noDamageReason))
                 {
