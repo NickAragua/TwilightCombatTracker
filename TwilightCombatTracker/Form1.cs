@@ -18,6 +18,8 @@ namespace TwilightCombatTracker
             btnAddOpfor.Click += AddUnitClick;
             lstBlueFor.SelectedIndexChanged += UnitSelectionHandler;
             lstOpfor.SelectedIndexChanged += UnitSelectionHandler;
+            lstBlueFor.KeyUp += KeyboardClickHandler;
+            lstOpfor.KeyUp += KeyboardClickHandler;
             btnRollInit.Click += RollInitHandler;
             btnSaveBlueUnits.Click += SaveUnitsHandler;
             btnSaveOpUnits.Click += SaveUnitsHandler;
@@ -36,6 +38,7 @@ namespace TwilightCombatTracker
             btnDeleteRed.Click += DeleteUnitHandler;
             btnDefectBlue.Click += DefectHandler;
             btnDefectRed.Click += DefectHandler;
+
 
             PopulateBluForList();
             PopulateOpforList();
@@ -97,6 +100,73 @@ namespace TwilightCombatTracker
             }
 
             selectedEngagement = null;
+        }
+
+        private void KeyboardClickHandler(Object sender, EventArgs e)
+        {
+            bool bluFor = sender == lstBlueFor;
+            UnitEquipmentTuple uet = bluFor ? (UnitEquipmentTuple)lstBlueFor.SelectedItem : (UnitEquipmentTuple)lstOpfor.SelectedItem;
+            int index = bluFor ? lstBlueFor.SelectedIndex : lstOpfor.SelectedIndex;
+
+            if (uet == null)
+            {
+                return;
+            }
+
+            Unit unit = uet.Unit;
+
+            switch (((KeyEventArgs)e).KeyCode) {
+                case Keys.Delete:
+                    combatManager.DeleteUnit(unit, bluFor);
+
+                    if (bluFor)
+                    {
+                        PopulateBluForList();
+                        if (index < lstBlueFor.Items.Count)
+                        {
+                            lstBlueFor.SelectedIndex = index;
+                        } 
+                        else if (lstBlueFor.Items.Count > 0)
+                        {
+                            lstBlueFor.SelectedIndex = lstBlueFor.Items.Count - 1;
+                        }
+                    }
+                    else
+                    {
+                        PopulateOpforList();
+                        if (index < lstOpfor.Items.Count) {
+                            lstOpfor.SelectedIndex = index;
+                        }
+                        else if (lstOpfor.Items.Count > 0)
+                        {
+                            lstOpfor.SelectedIndex = lstOpfor.Items.Count - 1;
+                        }
+                    }
+                    break;
+                case Keys.W:
+                    if (unit.Tags.Contains(TwilightCombatTracker.Tag.Withdrawn)) {
+                        unit.Tags.Remove(TwilightCombatTracker.Tag.Withdrawn);
+                    } 
+                    else 
+                    {
+                        unit.Tags.Add(TwilightCombatTracker.Tag.Withdrawn);
+                    }
+
+                    if (bluFor)
+                    {
+                        PopulateBluForList();
+                        lstBlueFor.SelectedItem = uet;
+                    }
+                    else
+                    {
+                        PopulateOpforList();
+                        lstOpfor.SelectedItem = uet;
+                    }
+
+                    break;
+                default:
+                    break;
+            }
         }
 
         private void UnitSelectionHandler(Object sender, EventArgs e)
