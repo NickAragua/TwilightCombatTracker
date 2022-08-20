@@ -339,6 +339,8 @@ namespace TwilightCombatTracker
             {
                 combatManager.DeleteEngagement((Engagement) lstEngagements.SelectedItem);
                 PopulateEngagementList();
+                PopulateBluForList();
+                PopulateOpforList();
             }
         }
 

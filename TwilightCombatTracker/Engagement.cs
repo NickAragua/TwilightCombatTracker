@@ -108,7 +108,7 @@ namespace TwilightCombatTracker
             int attackerRoll = random.Next(1, 100);
             int attackerPreSupportResult = attackerRoll + Attacker.Unit.getApplicableModifier(Defender.Unit, Attacker.Equipment);
 
-            supportResult = attackerPreSupportResult / supportDivider;
+            supportResult = attackerPreSupportResult / (supportDivider == 0 ? 1 : supportDivider);
 
             result.AppendLine(DetailedBreakdown());
 
