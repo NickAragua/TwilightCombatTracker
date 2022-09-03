@@ -187,9 +187,9 @@ namespace TwilightCombatTracker
             {
                 int pdCount = getPointDefenseCount(Defender, SupportingDefenders.Keys.ToList());
                 int damageDiscount = getPointDefenseDamageDiscount(Attacker, attackerPreSupportResult - defenderPreSupportResult,
-                    SupportingDefenders, pdCount, result);
+                    SupportingAttackers, pdCount, result);
                 damageDiscount += getNoDamageDamageDiscount(Attacker, attackerPostSupportResult - defenderPreSupportResult,
-                    SupportingDefenders, Defender.Unit, result);
+                    SupportingAttackers, Defender.Unit, result);
                 int actualDamage = Math.Max(damage - damageDiscount, 0);
 
                 ProcessDamage(Attacker.Unit, Attacker.Equipment, Defender.Unit, actualDamage, result, random, attackerCrit);
@@ -200,9 +200,9 @@ namespace TwilightCombatTracker
             {
                 int pdCount = getPointDefenseCount(Attacker, SupportingAttackers.Keys.ToList());
                 int damageDiscount = getPointDefenseDamageDiscount(Defender, defenderPreSupportResult - attackerPreSupportResult,
-                    SupportingAttackers, pdCount, result);
+                    SupportingDefenders, pdCount, result);
                 damageDiscount += getNoDamageDamageDiscount(Defender, defenderPreSupportResult - attackerPreSupportResult,
-                    SupportingAttackers, Defender.Unit, result);
+                    SupportingDefenders, Defender.Unit, result);
                 int actualDamage = Math.Max(damage - damageDiscount, 0);
 
                 ProcessDamage(Defender.Unit, Defender.Equipment, Attacker.Unit, actualDamage, result, random, attackerCrit);
@@ -247,6 +247,12 @@ namespace TwilightCombatTracker
             if (victim.Tags.Contains(Tag.Aircraft) && !shooterWeapon.Effects.ContainsKey(Tag.Aircraft))
             {
                 result.AppendLine("Aircraft can only be targeted by anti-air weapons.");
+                return;
+            }
+
+            if (damage <= 0)
+            {
+                result.AppendLine("Damage reduced to 0;");
                 return;
             }
 

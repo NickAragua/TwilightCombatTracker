@@ -129,6 +129,12 @@ namespace TwilightCombatTracker
             nodBuggyLaser.Effects.Add(Tag.Laser, +0);
             EquipmentDatabase.Add(nodBuggyLaser);
 
+            Equipment particleBeam = new Equipment();
+            particleBeam.Name = "Particle Beam";
+            particleBeam.Effects.Add(Tag.General, +10);
+            particleBeam.Effects.Add(Tag.Laser, +0);
+            EquipmentDatabase.Add(particleBeam);
+
             Equipment doubleBuggyLaser = new Equipment();
             doubleBuggyLaser.Name = "Double Buggy Laser";
             doubleBuggyLaser.Effects.Add(Tag.General, +10);
@@ -151,6 +157,13 @@ namespace TwilightCombatTracker
             scorpionBiprop.Effects.Add(Tag.Visceroid, -20);
             scorpionBiprop.Effects.Add(Tag.PointDefenseUseful, 0);
             EquipmentDatabase.Add(scorpionBiprop);
+
+            Equipment heavyBiprop = new Equipment();
+            heavyBiprop.Name = "Heavy Biprop";
+            heavyBiprop.Effects.Add(Tag.Vehicle, 20);
+            heavyBiprop.Effects.Add(Tag.Visceroid, -20);
+            heavyBiprop.Effects.Add(Tag.PointDefenseUseful, 0);
+            EquipmentDatabase.Add(heavyBiprop);
 
             Equipment scorpionLaser = new Equipment();
             scorpionLaser.Name = "Laser Cannon";
@@ -195,6 +208,20 @@ namespace TwilightCombatTracker
             predatorRailgun.Effects.Add(Tag.Vehicle, 20);
             predatorRailgun.Effects.Add(Tag.Visceroid, -20);
             EquipmentDatabase.Add(predatorRailgun);
+
+            Equipment dualRailgun = new Equipment();
+            dualRailgun.Name = "Dual Railgun";
+            dualRailgun.Effects.Add(Tag.Vehicle, 30);
+            dualRailgun.Effects.Add(Tag.Visceroid, -20);
+            EquipmentDatabase.Add(dualRailgun);
+
+            Equipment dualMissile = new Equipment();
+            dualMissile.Name = "Dual Missile";
+            dualMissile.Effects.Add(Tag.Aircraft, 15);
+            dualMissile.Effects.Add(Tag.FastSpeed, 15);
+            dualMissile.Effects.Add(Tag.FootInfantry, -10);
+            dualMissile.Effects.Add(Tag.PointDefenseUseful, 0);
+            EquipmentDatabase.Add(dualMissile);
 
             // aircraft Equipment:
             Equipment orcaRockets = new Equipment();
