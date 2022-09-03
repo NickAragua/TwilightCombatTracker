@@ -1,0 +1,195 @@
+<html>
+<head>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script src="https://code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
+<script type="text/javascript">
+	var currentObjectID = 0;
+	var selectedObject;
+	var selectedCell;
+
+	function popupEditUI(element) {
+		$(element).html("<input type='text' value='" + element.innerHTML + "'/><button onclick='commitEdit(this.parentNode, this.previousElementSibling)'>Edit</button>");
+	}
+
+	function commitEdit(element, textbox) {
+		$(element).html($(textbox).val());
+	}
+
+	function deleteObject() {
+		if (selectedObject) {
+			$(selectedObject).remove();
+			selectedObject = null;
+		}
+	}
+
+	function createObject() {
+		if (!selectedCell) {
+			x = $("#txtWidth").val();
+			y = $("#txtHeight").val();
+			selectedCell = $("#" + getCellID(x, y));
+		}	
+
+		id = "object" + currentObjectID++;		
+		name = $("#txtName").val();
+
+		$(selectedCell).append("<div id='" + id + "' class='draggable'>" + name + "</div>");
+		$("#" + id).dblclick(function() { popupEditUI(this); return false; });
+		$("#" + id).click( function() { 
+			if ($("#" + id).hasClass("selected")) {
+				$("#" + id).removeClass("selected");
+				selectedObject = null;
+			} else {
+				$("#" + id).addClass("selected"); 
+				selectedObject = $("#" + id);
+			}
+
+			if (selectedCell) {
+				$(selectedCell).removeClass("selected");
+				selectedCell = null;
+			}
+			return false; 			
+		} );
+
+		$(selectedCell).removeClass("selected");
+		selectedCell = null;
+	}
+
+	function handleCellClick(cell) {
+		if (selectedObject) {
+			$(cell).append(selectedObject);
+			selectedObject.removeClass("selected");
+			selectedObject = null;
+			return false;
+		}
+
+		if (!selectedCell) {
+			selectedCell = cell;
+			$(cell).addClass("selected");
+			return false;
+		} else {
+			// clicked below
+			if (cell.cellIndex == selectedCell.cellIndex && cell.parentNode.rowIndex > selectedCell.parentNode.rowIndex) {
+				if($(selectedCell).hasClass("bottomborder")) {
+					$(selectedCell).removeClass("bottomborder");
+				} else {
+					$(selectedCell).addClass("bottomborder");
+				}
+			}
+
+			if (cell.cellIndex == selectedCell.cellIndex && cell.parentNode.rowIndex < selectedCell.parentNode.rowIndex) {
+				if($(selectedCell).hasClass("topborder")) {
+					$(selectedCell).removeClass("topborder");
+				} else {
+					$(selectedCell).addClass("topborder");
+				}
+			}
+
+			if (cell.cellIndex > selectedCell.cellIndex && cell.parentNode.rowIndex == selectedCell.parentNode.rowIndex) {
+				if($(selectedCell).hasClass("rightborder")) {
+					$(selectedCell).removeClass("rightborder");
+				} else {
+					$(selectedCell).addClass("rightborder");
+				}
+			}
+
+			if (cell.cellIndex < selectedCell.cellIndex && cell.parentNode.rowIndex == selectedCell.parentNode.rowIndex) {
+				if($(selectedCell).hasClass("leftborder")) {
+					$(selectedCell).removeClass("leftborder");
+				} else {
+					$(selectedCell).addClass("leftborder");
+				}
+			}
+
+			$(selectedCell).removeClass("selected");
+			selectedCell = null;
+			return false;
+		}		
+	}
+
+	function createTable() {
+		width = $("#txtWidth").val();
+		height = $("#txtHeight").val();
+		html = "<table style='table-layout:fixed;'>";				
+
+		for (let x = 0; x < width; x++) {
+			html += "<tr>";
+
+			for (let y = 0; y < height; y++) {
+				coords = String.fromCharCode(65 + y) + (x + 1) + ":";
+				html += "<td id='" + getCellID(x, y) + "' class='snaptarget' style='height:100px' onclick='handleCellClick(this)'>" + coords + "</td>";
+			}
+			html += "</tr>";
+		}
+		
+		$("#tableDiv").html(html);
+	}
+
+	function getCellID(x, y) {
+		return "cell_" + x + "_" + y;
+	}
+
+	$( document ).ready(function() {
+		$("#txtWidth").val(6);
+		$("#txtHeight").val(6);
+
+		createTable();
+	});
+</script>
+
+<style>
+
+td.bottomborder {
+	border-bottom-width: 2px;
+	border-bottom-style: solid;
+	border-bottom-color: red;
+}
+
+td.leftborder {
+	border-left-width: 2px;
+	border-left-style: solid;
+	border-left-color: red;
+}
+
+td.rightborder {
+	border-right-width: 2px;
+	border-right-style: solid;
+	border-right-color: red;
+}
+
+td.topborder {
+	border-top-width: 2px;
+	border-top-style: solid;
+	border-top-color: red;
+}
+
+div.selected, td.selected {
+	border-width: 5px;
+	border-style: solid;
+	border-color: blue;
+}
+
+table, th, td {
+  border: 1px solid;
+}
+
+table {
+  width: 100%;
+}
+</style>
+
+
+</head>
+
+<body>
+X: <input type="text" id="txtWidth" value="6"/><br/>
+Y: <input type="text" id="txtHeight" value="6"/><br/>
+Name: <input type="text" id="txtName" value="Test"/><br/>
+<button id="createGridButton" onclick="createTable()">Create Grid</button>
+<button id="createObjectButton" onclick="createObject()">Create Object</button>
+<button id="deleteObjectButton" onclick="deleteObject()">Delete Object</button>
+
+<div id="tableDiv">
+</div>
+
+</body>
+</html>
