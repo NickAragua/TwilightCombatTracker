@@ -118,7 +118,6 @@ namespace TwilightCombatTracker
             nodBuggyMG.Name = "Buggy MG";
             nodBuggyMG.Effects.Add(Tag.Vehicle, -5);
             nodBuggyMG.Effects.Add(Tag.Armored, -5);
-            nodBuggyMG.Effects.Add(Tag.FootInfantry, 0);
             nodBuggyMG.Effects.Add(Tag.Visceroid, -20);
             EquipmentDatabase.Add(nodBuggyMG);
 

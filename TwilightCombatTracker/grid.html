@@ -3,44 +3,120 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 <script src="https://code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
 <script type="text/javascript">
-	var currentObjectID = 0;
 	var selectedObject;
 	var selectedCell;
+
+	var objectMap;
+
+	function addObjectToDB(objectCell, text, objectID) {
+		x = $(objectCell).index();
+		y = $(objectCell).parent().index();
+
+		if (!objectMap[x]) {
+			objectMap[x] = new Object();
+		}
+
+		if (!objectMap[x][y]) {
+			objectMap[x][y] = new Object();
+		}
+		objectMap[x][y][objectID] = text;
+	}
+
+	function removeObjectFromDB(objectCell, object) {
+		x = $(objectCell).index();
+		y = $(objectCell).parent().index();
+
+		if (objectMap[x] && objectMap[x][y] && objectMap[x][y][$(object)[0].id]) {
+			delete objectMap[x][y][$(object)[0].id];
+		}
+	}
+
+	function updateObjectInDB(object, text) {
+		var objectCell = $(object).parent();
+		x = $(objectCell).index();
+		y = $(objectCell).parent().index();
+
+		objectMap[x][y][object.id] = text;
+	}
+
+	function moveObjectInDB(sourceCell, destinationCell, object) {
+		if (sourceCell === destinationCell) {
+			return;
+		}
+		addObjectToDB(destinationCell, object.html(), object[0].id);
+		removeObjectFromDB(sourceCell, object);
+	}
+
+	function setBoundaryInDB(objectCell, direction, on) {
+		x = $(objectCell).index();
+		y = $(objectCell).parent().index();
+
+		if (!objectMap[x]) {
+			objectMap[x] = new Object();
+		}
+
+		if (!objectMap[x][y]) {
+			objectMap[x][y] = new Object();
+		}
+		
+		objectMap[x][y][direction] = on;
+	}
+
+	function showJson() {
+		if ($("#json").html().length == 0) {
+			$("#json").html(JSON.stringify(objectMap));
+		} else {
+			$("#json").html("");
+		}
+	}
 
 	function popupEditUI(element) {
 		$(element).html("<input type='text' value='" + element.innerHTML + "'/><button onclick='commitEdit(this.parentNode, this.previousElementSibling)'>Edit</button>");
 	}
 
 	function commitEdit(element, textbox) {
+		updateObjectInDB(element, $(textbox).val());
 		$(element).html($(textbox).val());
 	}
 
 	function deleteObject() {
 		if (selectedObject) {
+			removeObjectFromDB($(selectedObject).parent(), selectedObject);
 			$(selectedObject).remove();
 			selectedObject = null;
 		}
 	}
 
 	function createObject() {
+		name = $("#txtName").val();
+		if (name.length == 0) {
+			return;
+		}
+
 		if (!selectedCell) {
 			x = $("#txtWidth").val();
 			y = $("#txtHeight").val();
 			selectedCell = $("#" + getCellID(x, y));
 		}	
 
-		id = "object" + currentObjectID++;		
-		name = $("#txtName").val();
+		id = "object_" + selectedCell.id + "_" + selectedCell.childNodes.length;		
+		
 
-		$(selectedCell).append("<div id='" + id + "' class='draggable'>" + name + "</div>");
-		$("#" + id).dblclick(function() { popupEditUI(this); return false; });
-		$("#" + id).click( function() { 
-			if ($("#" + id).hasClass("selected")) {
-				$("#" + id).removeClass("selected");
+		$(selectedCell).append("<div id='" + id + "' class='draggable' style='width:fit-content'>" + name + "</div>");
+		addClickHandlersToObject($("#" + id));
+		addObjectToDB(selectedCell, name, id);
+	}
+
+	function addClickHandlersToObject(object) {
+		object.dblclick(function() { popupEditUI(this); return false; });
+		object.click( function(item) { 
+			if ($(item.target).hasClass("selected")) {
+				$(item.target).removeClass("selected");
 				selectedObject = null;
 			} else {
-				$("#" + id).addClass("selected"); 
-				selectedObject = $("#" + id);
+				$(item.target).addClass("selected"); 
+				$(selectedObject).removeClass("selected");
+				selectedObject = $(item.target);
 			}
 
 			if (selectedCell) {
@@ -49,13 +125,11 @@
 			}
 			return false; 			
 		} );
-
-		$(selectedCell).removeClass("selected");
-		selectedCell = null;
 	}
 
 	function handleCellClick(cell) {
-		if (selectedObject) {
+		if (selectedObject && selectedObject.parent()[0] !== cell) {
+			moveObjectInDB($(selectedObject).parent(), cell, selectedObject);
 			$(cell).append(selectedObject);
 			selectedObject.removeClass("selected");
 			selectedObject = null;
@@ -63,40 +137,54 @@
 		}
 
 		if (!selectedCell) {
+			if (selectedObject) {
+				selectedObject.removeClass("selected");
+				selectedObject = null;
+			}
+
 			selectedCell = cell;
 			$(cell).addClass("selected");
+
 			return false;
 		} else {
 			// clicked below
 			if (cell.cellIndex == selectedCell.cellIndex && cell.parentNode.rowIndex > selectedCell.parentNode.rowIndex) {
 				if($(selectedCell).hasClass("bottomborder")) {
 					$(selectedCell).removeClass("bottomborder");
+					setBoundaryInDB(selectedCell, 3, 0);
 				} else {
 					$(selectedCell).addClass("bottomborder");
+					setBoundaryInDB(selectedCell, 3, 1);
 				}
 			}
 
 			if (cell.cellIndex == selectedCell.cellIndex && cell.parentNode.rowIndex < selectedCell.parentNode.rowIndex) {
 				if($(selectedCell).hasClass("topborder")) {
 					$(selectedCell).removeClass("topborder");
+					setBoundaryInDB(selectedCell, 1, 0);
 				} else {
 					$(selectedCell).addClass("topborder");
+					setBoundaryInDB(selectedCell, 1, 1);
 				}
 			}
 
 			if (cell.cellIndex > selectedCell.cellIndex && cell.parentNode.rowIndex == selectedCell.parentNode.rowIndex) {
 				if($(selectedCell).hasClass("rightborder")) {
 					$(selectedCell).removeClass("rightborder");
+					setBoundaryInDB(selectedCell, 2, 0);
 				} else {
 					$(selectedCell).addClass("rightborder");
+					setBoundaryInDB(selectedCell, 2, 1);
 				}
 			}
 
 			if (cell.cellIndex < selectedCell.cellIndex && cell.parentNode.rowIndex == selectedCell.parentNode.rowIndex) {
 				if($(selectedCell).hasClass("leftborder")) {
 					$(selectedCell).removeClass("leftborder");
+					setBoundaryInDB(selectedCell, 0, 0);
 				} else {
 					$(selectedCell).addClass("leftborder");
+					setBoundaryInDB(selectedCell, 0, 1);
 				}
 			}
 
@@ -107,21 +195,73 @@
 	}
 
 	function createTable() {
-		width = $("#txtWidth").val();
-		height = $("#txtHeight").val();
-		html = "<table style='table-layout:fixed;'>";				
+		var width = $("#txtWidth").val();
+		var height = $("#txtHeight").val();
+		var html = "<table style='table-layout:fixed;'>";
+		
+		if ($("#txtName").val()) {
+			objectMap = JSON.parse($("#txtName").val());
+		} else {
+			initObjectMap(width, height);
+		}			
 
 		for (let x = 0; x < width; x++) {
 			html += "<tr>";
 
 			for (let y = 0; y < height; y++) {
 				coords = String.fromCharCode(65 + y) + (x + 1) + ":";
-				html += "<td id='" + getCellID(x, y) + "' class='snaptarget' style='height:100px' onclick='handleCellClick(this)'>" + coords + "</td>";
+				html += "<td class='snaptarget";
+
+				if (objectMap[y][x][0] == 1) {
+					html += " leftborder";
+				}
+				if (objectMap[y][x][1] == 1) {
+					html += " topborder";
+				}
+				if (objectMap[y][x][2] == 1) {
+					html += " rightborder";
+				}
+				if (objectMap[y][x][3] == 1) {
+					html += " bottomborder";
+				}
+
+
+				html += "' id='" + getCellID(x, y) + "' style='height:100px' onclick='handleCellClick(this)'>" + coords;
+
+				for (object in objectMap[y][x]) {
+					if (object.startsWith("object_")) {
+						html += "<div id='" + object + "' style='width:fit-content'>" + objectMap[y][x][object] + "</div>";
+					}
+				}
+				
+				html += "</td>";
 			}
 			html += "</tr>";
 		}
 		
 		$("#tableDiv").html(html);
+
+		for (let x = 0; x < width; x++) {
+			for (let y = 0; y < width; y++) {
+				for (object in objectMap[y][x]) {
+					if (object.startsWith("object_")) {
+						addClickHandlersToObject($("#" + object));
+					}
+				}
+			}
+		}
+		
+	}
+	
+	function initObjectMap(width, height) {
+		objectMap = new Object();
+		
+		for (let x = 0; x < width; x++) {
+			objectMap[x] = new Object();
+			for (let y = 0; y < height; y++) {
+				objectMap[x][y] = new Object();
+			}
+		}
 	}
 
 	function getCellID(x, y) {
@@ -131,6 +271,7 @@
 	$( document ).ready(function() {
 		$("#txtWidth").val(6);
 		$("#txtHeight").val(6);
+		$("#txtName").val("");
 
 		createTable();
 	});
@@ -187,6 +328,9 @@ Name: <input type="text" id="txtName" value="Test"/><br/>
 <button id="createGridButton" onclick="createTable()">Create Grid</button>
 <button id="createObjectButton" onclick="createObject()">Create Object</button>
 <button id="deleteObjectButton" onclick="deleteObject()">Delete Object</button>
+<button id="showJSONButton" onclick="showJson()">Show JSON</button>
+
+<div id="json"></div>
 
 <div id="tableDiv">
 </div>
